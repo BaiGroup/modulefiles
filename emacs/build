@@ -1,0 +1,4 @@
+module add gcc/5.1.0 giflib/5.1.1
+./configure --prefix=$HOME/tools/emacs-24.5/build
+make -j 16
+make install

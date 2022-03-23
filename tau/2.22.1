@@ -1,0 +1,14 @@
+#%Module
+conflict tau
+
+set version 2.22.1
+set arch x86_64
+set homedir $::env(HOME)
+set basedir $homedir/tools/tau-$version/build
+
+prepend-path PATH $basedir/$arch/bin
+prepend-path MANPATH $basedir/man
+prepend-path LIBRARY_PATH $basedir/$arch/lib
+prepend-path LD_LIBRARY_PATH $basedir/$arch/lib
+prepend-path C_INCLUDE_PATH $basedir/include
+prepend-path CPLUS_INCLUDE_PATH $basedir/include

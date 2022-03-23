@@ -1,0 +1,47 @@
+module add intel/2013.1.117 ompi/1.8.3-intel
+
+## Manual compilation
+export NWCHEM_TOP=$HOME/tools/nwchem-6.5
+export NWCHEM_TARGET=LINUX64
+export NWCHEM_MODULES="all python"
+
+export ARMCI_NETWORK=MPI-TS
+export MSG_COMMS=MPI
+export USE_MPI=y
+export USE_MPIF=y
+export USE_MPIF4=y
+#export LIBMPI="-Wl,--rpath -Wl,/opt/torque/lib -Wl,-rpath -Wl,/share/apps/openmpi-1.8.3/intel13/lib -Wl,--enable-new-dtags -lmpi_usempif08 -lmpi_usempi_ignore_tkr -lmpi_mpifh -lmpi"
+export LIBMPI="-lmpi_usempif08 -lmpi_usempi_ignore_tkr -lmpi_mpifh -lmpi"
+export MPI_LIB="-L/opt/torque/lib -L/share/apps/openmpi-1.8.3/intel13/lib"
+export MPI_INCLUDE="-I/share/apps/openmpi-1.8.3/intel13/include -I/share/apps/openmpi-1.8.3/intel13/lib"
+
+export USE_NOFSCHECK=TRUE
+export USE_NOIO=TRUE
+export LIB_DEFINES="-DDFLT_TOT_MEM=16777216"
+export MRCC_METHODS=TRUE
+
+export PYTHONHOME=/share/apps/python-2.7.8
+export PYTHONVERSION=2.7
+#export USE_PYTHON64=y
+
+export BLASOPT="$MKLROOT/lib/intel64/libmkl_scalapack_ilp64.a $MKLROOT/lib/intel64/libmkl_lapack95_ilp64.a $MKLROOT/lib/intel64/libmkl_blas95_ilp64.a -Wl,--start-group $MKLROOT/lib/intel64/libmkl_cdft_core.a $MKLROOT/lib/intel64/libmkl_intel_ilp64.a $MKLROOT/lib/intel64/libmkl_core.a $MKLROOT/lib/intel64/libmkl_sequential.a -Wl,--end-group $MKLROOT/lib/intel64/libmkl_blacs_openmpi_ilp64.a -lpthread -lm"
+#export BLASOPT="-L/share/apps/intel-12/composer_xe_2013.1.117/mkl/lib/intel64 -lmkl_scalapack_ilp64 -lmkl_lapack95_ilp64 -lmkl_blas95_ilp64 -lmkl_cdft_core -lmkl_intel_ilp64 -lmkl_core -lmkl_sequential -lmkl_blacs_openmpi_ilp64 -lpthread -lm"
+export BLAS_LIB="$BLASOPT"
+export LAPACK="$BLASOPT"
+export LAPACK_LIB="$LAPACK"
+export USE_SCALAPACK=y
+export SCALAPACK="$BLASOPT"
+export SCALAPACK_LIB="$SCALAPACK"
+
+cd $NWCHEM_TOP/src
+make nwchem_config
+make FC=ifort > >(tee make.log) 2> >(tee make.log >&2)
+
+## Using the build_nwchem script
+export MKLROOT="/share/apps/intel-12/composer_xe_2013.1.117/mkl"
+export BLASOPT="$MKLROOT/lib/intel64/libmkl_scalapack_ilp64.a $MKLROOT/lib/intel64/libmkl_lapack95_ilp64.a $MKLROOT/lib/intel64/libmkl_blas95_ilp64.a -Wl,--start-group $MKLROOT/lib/intel64/libmkl_cdft_core.a $MKLROOT/lib/intel64/libmkl_intel_ilp64.a $MKLROOT/lib/intel64/libmkl_core.a $MKLROOT/lib/intel64/libmkl_sequential.a -Wl,--end-group $MKLROOT/lib/intel64/libmkl_blacs_openmpi_ilp64.a -lpthread -lm"
+export LIB_DEFINES="-DDFLT_TOT_MEM=16777216"
+export MRCC_METHODS=TRUE
+
+cd $NWCHEM_TOP
+./contrib/distro-tools/build_nwchem | tee build_nwchem.log

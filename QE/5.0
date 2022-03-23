@@ -1,0 +1,5 @@
+#%Module
+conflict QE
+
+set homedir $::env(HOME)
+append-path PATH $homedir/tools/espresso-5.0/bin

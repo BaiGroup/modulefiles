@@ -1,0 +1,2 @@
+module load pdt papi binutils
+./installtau -prefix=/home/siepmann/baip/tools/tau-2.22.1/build -pdt=/home/siepmann/baip/tools/pdtoolkit-3.18.1/build -papi=/soft/papi/5.0.1 -c++=icpc -cc=icc -fortran=intel -mpi

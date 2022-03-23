@@ -1,0 +1,8 @@
+#%Module
+conflict dsd
+
+set itppdir $::env(HOME)/tools/itpp/build/itpp
+set mbelibdir $::env(HOME)/tools/mbelib/build
+set dsddir $::env(HOME)/tools/dsd/build
+append-path PATH $dsddir
+append-path LD_LIBRARY_PATH $itppdir:$mbelibdir

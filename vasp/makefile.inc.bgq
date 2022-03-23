@@ -1,0 +1,198 @@
+# ================================================
+# Date: May 2011
+#
+# IBM Blue Gene/Q specifications
+# Note: The variables in the LIBRARY_DIRECTORIES section must be changed to 
+# reflect the system you are compiling on
+# ================================================
+
+#Default options
+MULTITHREADS ?= y
+SCALAPACK ?= n
+FFT ?= essl
+GAMMA ?= n
+TUNE ?= y
+PROFILE ?= none
+OMP ?= none
+ELPA ?= none
+WANNIER90 ?= n
+VTST ?= n
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++ 
+# PREPROCESSOR
+# ++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+CPP = cpp
+#Set values of VASP CPP flags specific for BG.
+#use_collective and use_allreduce turns on collective communication which by default VASP avoids
+#MPI_BLOCK sets the size large chunks of data should be broken into for send/recieve
+#Since use_collective is also defined MPI_BLOCK is only used in the fast global sum routine
+VASP_CPPFLAGS = -DMPI_BLOCK=64000 -Duse_collective -Duse_allreduce -Duse_collective -Ddo_loops -DIFC 
+ADDITIONAL_CPPFLAGS +=  -Ddo_loops 
+#ADDITIONAL_CPPFLAGS +=  -Ddo_loops -DIBM_ESSL
+#BLUEGENE avoids using VASPS fast interchange algorithm in M_sumf_d
+#CACHE_SIZE is used in fftw routines
+ADDITIONAL_CPPFLAGS += -DBLUEGENE  -DCACHE_SIZE=32000 -DMPI_BLOCK=64000  -Duse_collective -DHOST=\"BGQ\" 
+#ADDITIONAL_CPPFLAGS += -DESSL_RANDOM -DIBM_PARALLEL_IO
+ADDITIONAL_INCLUDE_DIRS = 
+ 
+# ++++++++++++++++++++++++++++++++++++++++++++++++ 
+# COMPILER
+# ++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+#qmaxmem=-1 assumed at 03 and higher. 
+#NOTE: All files compiled with BASE flags
+#Then each file gets one of the addition flag options depending on its class
+#qnohot to turn of the qhot implied by O3 which gives calculation errors
+FFLAGS_BASE = -g -qfree -qfullpath -qmaxmem=-1
+#FFLAGS_OPTIMIZATION_STANDARD = -O3 -qnohot -qstrict
+#FFLAGS_OPTIMIZATION_NOVEC = -O3  -qarch=qp
+FFLAGS_OPTIMIZATION_STANDARD = -O3 -qnohot -qarch=qp -qtune=qp
+FFLAGS_OPTIMIZATION_NOVEC = -O3 -qnohot -qarch=qp -qtune=qp
+FFLAGS_OPTIMIZATION_NOOPENMP = -O3 -qnohot -qarch=qp -qtune=qp
+FFLAGS_OPTIMIZATION_O2 = -O2
+#FFLAGS_OPTIMIZATION_NOOPENMP = -O2
+#FFLAGS_OPTIMIZATION_O2 = -O2
+FFLAGS_OPTIMIZATION_O1 = -O0
+
+ifeq ($(O2), y)
+FFLAGS_OPTIMIZATION_STANDARD = -O2 -qnohot -qarch=qp -qtune=qp
+FFLAGS_OPTIMIZATION_NOVEC = -O2 -qnohot -qarch=qp -qtune=qp
+FFLAGS_OPTIMIZATION_NOOPENMP = -O2 -qnohot -qarch=qp -qtune=qp
+endif
+
+ifeq ($(TUNE), y)
+  #qarch=qp implies qsimd=auto and also turns on the BGQ vector type 
+  #qarch turned on automatically at O4 and implies qtune=pq
+  #FFLAGS_OPTIMIZATION_STANDARD = -O3 -qarch=qp -qtune=qp -qhot=level1
+#  FFLAGS_OPTIMIZATION_STANDARD += -qarch=qp -qhot=level2
+  #FFLAGS_OPTIMIZATION_NOOPENMP = -O3 -qarch=qp -qtune=qp -qhot=level1
+endif
+
+#Use thread-safe compilers by default
+ifeq ($(SERIAL), yes)
+  CC = bgxlc_r
+  FC = bgxlf90_r
+else
+#  CC = mpixlc_r -cc=bgxlc_r
+#  FC = mpixlf90_r -fc=bgxlf90_r
+  CC = mpixlc_r
+  FC = mpixlf90_r 
+endif
+
+ifeq ($(OMP), auto)
+  FFLAGS_OPTIMIZATION_O1 += -qsmp=omp:auto 
+  FFLAGS_OPTIMIZATION_O2 += -qsmp=omp:auto 
+  FFLAGS_OPTIMIZATION_STANDARD += -qsmp=omp:auto 
+  FFLAGS_OPTIMIZATION_NOVEC += -qsmp=omp:auto
+endif
+
+ifeq ($(OMP), manual)
+  FFLAGS_OPTIMIZATION_O1 += -qsmp=omp:noauto
+  FFLAGS_OPTIMIZATION_O2 += -qsmp=omp:noauto
+  FFLAGS_OPTIMIZATION_STANDARD += -qsmp=omp:noauto
+  FFLAGS_OPTIMIZATION_NOVEC += -qsmp=omp:noauto
+endif
+
+ifeq ($(ELPA), 1)
+  VASP_CPPFLAGS += -DELPA
+  FILES_ELPA = elpa1.o
+endif
+
+ifeq ($(ELPA), 2)
+  VASP_CPPFLAGS += -DELPA
+  FILES_ELPA = elpa1.o elpa2.o elpa2_kernels_complex.o elpa2_kernels_real_bgq.o
+endif
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++ 
+# LINKER
+# ++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+LIB_DIR=/soft/libraries/alcf/current/xl
+LAPACK_LIBS = $(LIB_DIR)/LAPACK/lib/liblapack.a
+
+SCALAPACK_LIBS = $(LIB_DIR)/SCALAPACK/lib/libscalapack.a
+ifeq ($(SCALA), 1)
+  SCALAPACK_LIBS = $(LIB_DIR)scalapack-1.8.0/libscalapack.a $(LIB_DIR)/scalapack-1.8.0/libblacsF77init.a $(LIB_DIR)/scalapack-1.8.0/libblacs.a
+endif
+ifeq ($(SCALA), 2)
+  SCALAPACK_LIBS = $(LIB_DIR)/SCALAPACK/lib/libscalapack.a
+endif
+
+ifeq ($(WANNIER90), noavail)
+ADDITIONAL_CPPFLAGS += -DVASP2WANNIER90
+WANNIER90_LIB=$(LIB_DIR)/wannier90/libwannier.a
+else
+WANNIER90_LIB=
+endif
+
+ifeq ($(VTST), noavail)
+VTST_OBJ=bfgs_vtst.o dynmat_vtst.o  instanton_vtst.o  lbfgs_vtst.o sd_vtst.o cg_vtst.o dimer_vtst.o bbm_vtst.o \
+         fire_vtst.o lanczos_vtst.o neb_vtst.o  qm_vtst.o opt_vtst.o \
+         chain_vtst.o
+ADDITIONAL_CPPFLAGS += -DMPI_CHAIN -DVTST
+else
+VTST_OBJ=chain.o
+endif
+     
+EXTRA_LIBS=
+
+MATH_LIBS = -lmassv -lmass
+
+ESSL_LIB=/soft/libraries/essl/current/lib64
+
+ifeq ($(MULTITHREADS), y)
+  BLAS_LIBS = $(ESSL_LIB)/libesslsmpbg.a -lxlsmp
+  # MPITRACE=-Wl,-wrap,open -Wl,-wrap,close -Wl,-wrap,read -Wl,-wrap,write -Wl,-wrap,fopen -Wl,-wrap,fclose -Wl,-wrap,fread -Wl,-wrap,fwrite $(LIB_DIR)/mpitrace/libmpihpm_smpio.a -L/bgsys/drivers/ppcfloor/bgpm/lib/ -lbgpm -L/bgsys/drivers/ppcfloor/spi/lib/ -lSPI_upci_cnk
+else
+  BLAS_LIBS = $(ESSL_LIB)/libesslbg.a -lxlsmp
+  # MPITRACE=-Wl,-wrap,open -Wl,-wrap,close -Wl,-wrap,read -Wl,-wrap,write -Wl,-wrap,fopen -Wl,-wrap,fclose -Wl,-wrap,fread -Wl,-wrap,fwrite $(LIB_DIR)/mpitrace/libmpihpmio.a -L/bgsys/drivers/ppcfloor/bgpm/lib/ -lbgpm -L/bgsys/drivers/ppcfloor/spi/lib/ -lSPI_upci_cnk
+endif
+
+
+ifeq ($(CC), mpicc)
+  MATH_LIB_DIR = 
+  ADDITIONAL_LIBRARY_DIRS = 
+  BLAS_LIBS = -lesslbg 
+  MATH_LIBS =  -lxlopt -lxl -lxlf90_r -lxlfmath -lpthread -lxl 
+endif
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++ 
+# LIBRARY DIRECTORIES
+# ++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+DIR_VASP_LIB ?= ../vasp.5.lib/
+BLAS_LIB_DIR ?= $(DIR_VASP_LIB)
+MATH_LIB_DIR ?= $(HOME)/lib/
+LAPACK_LIB_DIR ?= $(BLAS_LIB_DIR)
+SCALAPACK_LIB_DIR ?= $(LAPACK_LIB_DIR)
+
+VASP_LIBRARY_DIRS = -L$(LAPACK_LIB_DIR) -L$(SCALAPACK_LIB_DIR) -L$(BLAS_LIB_DIR) -L$(MATH_LIB_DIR) 
+
+VASP_LIBRARY_DIRS += $(ADDITIONAL_LIBRARY_DIRS)
+
+# (fullessl)           $(SCALAPACK_LIBS) $(BLAS_LIBS) ../vasp.5.lib/linpack_double.o $(BLAS_LIBS) $(LAPACK_LIBS)  $(BLAS_LIBS) $(MATH_LIBS) $(MPITRACE)
+#           $(SCALAPACK_LIBS) $(BLAS_LIBS) ../vasp.5.lib/linpack_double.o $(LAPACK_LIBS)  $(BLAS_LIBS) $(MATH_LIBS) $(MPITRACE)
+# VASP_LIBS= $(EXTRA_LIBS) $(WANNIER90_LIB) ../vasp.5.lib/dsygv.o ../vasp.5.lib/dgegv.o ../vasp.5.lib/dlasrt2.o  ../vasp.5.lib/zgeev.o ../vasp.5.lib/dgeev.o  -L../vasp.5.lib -ldmy$(dmyver) \
+           $(SCALAPACK_LIBS) $(BLAS_LIBS) ../vasp.5.lib/linpack_double.o $(BLAS_LIBS) $(LAPACK_LIBS)  $(BLAS_LIBS) $(MATH_LIBS) $(MPITRACE)
+VASP_LIBS= $(EXTRA_LIBS) $(WANNIER90_LIB) -L../vasp.5.lib -ldmy$(dmyver) \
+           $(SCALAPACK_LIBS) $(LAPACK_LIBS)  $(BLAS_LIBS) $(MATH_LIBS) $(MPITRACE)
+# ++++++++++++++++++++++++++++++++++++++++++++++++ 
+# ESSL FOURIER TRANSFORM FLAGS
+# ++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+ifeq ($(FFT),essl)
+  CPPFLAGS += -DFFT_ESSL
+  FFT_SUFFIX = -essl
+endif
+
+# ================================================
+# Platform dependencies
+# ================================================
+
+#FILES_OBJ_OPTIMIZATION_O1 = pseudo.o broyden.o nonlr.o
+FILES_OBJ_OPTIMIZATION_O1 = pseudo.o broyden.o 
+FILES_OBJ_OPTIMIZATION_O2 = nmr.o chi.o xml.o stufak.o ebs.o force.o 
+FILES_OBJ_OPTIMIZATION_NOOPENMP = twoelectron4o.o subrot_scf.o chi_base.o us.o wave_mpi.o wave_high.o scala.o $(FILES_ELPA)
+#FILES_OBJ_EXTRA += fileioC.o
+

@@ -1,0 +1,33 @@
+# module add intel/2013/update2 ompi/1.6.3/intel-2013-update2
+#
+# libinit
+# ../configure CC=icc CXX=icpc F77=ifort --prefix=$HOME/tools/libint-1.1.4/build
+# make -j8 && make install
+#
+# libxc
+# ./configure CC=icc FC=ifort --prefix=$HOME/tools/libxc-2.1.1
+# make -j8 && make install
+#
+# cp2k
+# cd ~/tools/cp2k/cp2k/makefiles; Modify ../arch/Linux-x86-64-intel13.popt; make -j 8 ARCH=Linux-x86-64-intel13 VERSION=popt
+
+LIBINIT_DIR=$(HOME)/tools/libint-1.1.4/build
+LIBXC_DIR=$(HOME)/tools/libxc-2.1.1
+MKL_LIB =/soft/intel/x86_64/2013/composer_xe_2013/composer_xe_2013.2.146/mkl/lib/intel64
+MKL_INC =/soft/intel/x86_64/2013/composer_xe_2013/composer_xe_2013.2.146/mkl/include
+FFTW_INC =/soft/intel/x86_64/2013/composer_xe_2013/composer_xe_2013.2.146/mkl/include/fftw
+
+CC       = cc
+CPP      =
+FC       = mpif90
+LD       = mpif90
+AR       = ar -r
+DFLAGS   = -D__INTEL -D__FFTSG -D__BLACS -D__MKL -D__parallel -D__SCALAPACK -D__FFTW3 -D__LIBINT -D__LIBXC2
+CFLAGS   = $(DFLAGS) -O2
+CPPFLAGS =
+FCFLAGS  = -I$(MKL_INC) -I$(FFTW_INC) $(DFLAGS) -free -fpp -O3 -xHost -pad -opt-prefetch -unroll -heap-arrays 64
+#-mkl=cluster
+LDFLAGS  = $(FCFLAGS)
+LIBS     = $(LIBINIT_DIR)/lib/libderiv.a $(LIBINIT_DIR)/lib/libint.a -lstdc++ $(LIBXC_DIR)/lib/libxc.a $(MKL_LIB)/libmkl_scalapack_lp64.a $(MKL_LIB)/libmkl_lapack95_lp64.a $(MKL_LIB)/libmkl_blas95_lp64.a -Wl,--start-group $(MKL_LIB)/libmkl_cdft_core.a $(MKL_LIB)/libmkl_intel_lp64.a $(MKL_LIB)/libmkl_core.a $(MKL_LIB)/libmkl_sequential.a -Wl,--end-group $(MKL_LIB)/libmkl_blacs_openmpi_lp64.a -lpthread -lm
+
+OBJECTS_ARCHITECTURE = machine_intel.o

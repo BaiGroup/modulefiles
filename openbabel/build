@@ -1,0 +1,3 @@
+module add gcc/4.9.2 swig/2.0.11
+CC=gcc CXX=g++ cmake .. -DEIGEN3_INCLUDE_DIR=/home/siepmann/baip/tools/eigen3.2.5 -DPYTHON_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/home/siepmann/baip/tools/openbabel-2.3.2/bin
+make -j8 && make install

@@ -1,0 +1,11 @@
+#%Module
+proc ModulesHelp { } {
+    puts stderr "\tThis module adds PATHs and variables that allow you"
+    puts stderr "\taccess TURBOMOLE."
+}
+
+set basedir "/share/apps/turbomole/7.0"
+
+setenv basedir $basedir
+setenv PARA_ARCH MPI
+append-path PATH $basedir/scripts:$basedir/bin/em64t-unknown-linux-gnu_mpi:$basedir/TmoleX

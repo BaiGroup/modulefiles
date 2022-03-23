@@ -1,0 +1,9 @@
+#%Module
+conflict git
+
+set version "2.9.5"
+module-whatis   "Provides git $version distributed version control system"
+set basedir "$::env(HOME)/tools/git-$version/build"
+
+prepend-path PATH $basedir/bin
+prepend-path MANPATH $basedir/share/man

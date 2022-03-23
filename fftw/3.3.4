@@ -1,0 +1,18 @@
+#%Module
+conflict fftw
+
+set version "3.3.4"
+set compiler "intel13"
+module-whatis   "Provides FFTW $version for $compiler compilers"
+set basedir /share/apps/fftw-$version/$compiler
+
+prepend-path PATH $basedir/bin
+prepend-path MANPATH $basedir/share/man
+prepend-path LD_LIBRARY_PATH $basedir/lib
+prepend-path LD_RUN_PATH $basedir/lib
+prepend-path LIBRARY_PATH $basedir/lib
+prepend-path CPATH $basedir/include
+prepend-path C_INCLUDE_PATH $basedir/include
+prepend-path CPLUS_INCLUDE_PATH $basedir/include
+prepend-path FPATH $basedir/include
+prepend-path INCLUDE $basedir/include

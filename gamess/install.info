@@ -1,0 +1,33 @@
+#!/bin/csh
+#module load intel/12.1 impi/4.0.0.028/intel; cd tools/gamess; ./config; Edit ddi/compddi to change MAXCPUS and MAXNODES; cd ddi; ./compddi > >(tee compddi.log) 2> >(tee compddi.log >&2); cd ../; ./compall > >(tee compall.log) 2> >(tee compall.log >&2); ./lked gamess 01 > >(tee lked.log) 2> >(tee lked.log >&2); Edit rungms to substitute $GMSPATH for all /home/mike/gamess
+#set TARGET=mpi
+#set USERSCR=$2
+#set GMSPATH=$HOME/tools/gamess
+#set VERNO=01    # revision number of the executable created by 'lked' step
+#if (null$USERSCR == null) set USERSCR=`pwd`
+#if (null$VERNO == null) set VERNO=00
+#set SCR=$USERSCR/scr
+#if (! -d $SCR) mkdir $SCR
+#   if (null$PPN == null) set PPN=1 # put this after set PPN=$4
+#   setenv LD_LIBRARY_PATH /soft/intel/ict/4.0/impi/4.0.0.028/lib64:$LD_LIBRARY_PATH
+#   set path=(/soft/intel/ict/4.0/impi/4.0.0.028/bin64 $path)
+#rungms is used to perform calculations, tools/gms is used as a front-end to submit the back-end "rungms" jobs to a batch schedular (SGE or PBS)
+
+#   compilation configuration for GAMESS
+#   generated on node1084
+#   generated at Wed Jul  4 13:00:21 CDT 2012
+setenv GMS_PATH            /home/siepmann/baip/tools/gamess
+setenv GMS_BUILD_DIR       /home/siepmann/baip/tools/gamess
+#         machine type
+setenv GMS_TARGET          linux64
+#         FORTRAN compiler setup
+setenv GMS_FORTRAN         ifort
+setenv GMS_IFORT_VERNO     12
+#         mathematical library setup
+setenv GMS_MATHLIB         mkl
+setenv GMS_MATHLIB_PATH    /soft/intel/x86_64/12.1/8.273/composer_xe_2011_sp1.8.273/mkl/lib/intel64
+setenv GMS_MKL_VERNO       10
+#         parallel message passing model setup
+setenv GMS_DDI_COMM        mpi
+setenv GMS_MPI_LIB         impi
+setenv GMS_MPI_PATH        /soft/intel/ict/4.0/impi/4.0.0.028

@@ -1,0 +1,4 @@
+#%Module
+conflict dl_poly
+
+append-path PATH $::env(HOME)/tools/dl_poly_4.03/execute

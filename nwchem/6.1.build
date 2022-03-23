@@ -1,0 +1,34 @@
+export LARGE_FILES=TRUE
+#export USE_NOFSCHECK=TRUE
+#export LIB_DEFINES=
+
+export NWCHEM_TOP=$HOME/tools/nwchem-6.1
+export NWCHEM_TARGET=LINUX64
+
+export USE_MPI=y
+export USE_MPIF=y
+export USE_MPIF4=y
+export LIBMPI="-lmpi_f90 -lmpi_f77 -lmpi -ldl -Wl,--export-dynamic -lnsl -lutil -lopen-rte -lopen-pal"
+export MPI_LOC=/opt/openmpi/1.4.4/intel
+export MPI_LIB=$MPI_LOC/lib
+export MPI_INCLUDE=$MPI_LOC/include
+
+export PYTHONHOME=/soft/nwchem/python
+export PYTHONVERSION=2.6
+#export USE_PYTHON64=y
+
+export BLASOPT="-L/soft/intel/x86_64/12.1/8.273/composer_xe_2011_sp1.8.273/mkl/lib/intel64 -lmkl_scalapack_ilp64 -lmkl_lapack95_ilp64 -lmkl_blas95_ilp64 -lmkl_cdft_core -lmkl_intel_ilp64 -lmkl_core -lmkl_sequential -lmkl_blacs_openmpi_ilp64 -lpthread -lm"
+export USE_SCALAPACK=y
+export SCALAPACK="-L/soft/intel/x86_64/12.1/8.273/composer_xe_2011_sp1.8.273/mkl/lib/intel64 -lmkl_scalapack_ilp64 -lmkl_lapack95_ilp64 -lmkl_blas95_ilp64 -lmkl_cdft_core -lmkl_intel_ilp64 -lmkl_core -lmkl_sequential -lmkl_blacs_openmpi_ilp64 -lpthread -lm"
+
+export ARMCI_NETWORK=OPENIB
+export IB_INCLUDE=/usr/include/infiniband
+export MSG_COMMS=MPI
+export IB_LIB=/usr/lib64
+export IB_LIB_NAME="-libverbs"
+
+module load intel/12.1 ompi/1.4.4/intel
+
+cd $NWCHEM_TOP/src
+make nwchem_config NWCHEM_MODULES=pnnl
+make CC=icc FC=ifort > >(tee make.log) 2> >(tee make.log >&2)

@@ -1,0 +1,13 @@
+#%Module
+conflict perfsuite
+
+set version 1.1.2
+set homedir $::env(HOME)
+set basedir $homedir/tools/perfsuite-$version/build
+
+prepend-path PATH $basedir/bin
+prepend-path MANPATH $basedir/share/man
+prepend-path LIBRARY_PATH $basedir/lib
+prepend-path LD_LIBRARY_PATH $basedir/lib
+prepend-path C_INCLUDE_PATH $basedir/include
+prepend-path CPLUS_INCLUDE_PATH $basedir/include

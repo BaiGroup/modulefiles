@@ -1,0 +1,4 @@
+#%Module
+conflict cp2k
+
+append-path PATH $::env(HOME)/tools/cp2k/trunk/cp2k/exe/Linux-x86-64-intel

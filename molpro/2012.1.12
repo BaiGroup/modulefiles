@@ -1,0 +1,7 @@
+#%Module
+set basedir /share/apps/molpro/2012.1.12
+set tmpdir "/state/partition1/$env(USER)/molpro_temp"
+setenv TMPDIR $tmpdir
+system "mkdir -p $tmpdir"
+setenv TCGRSH /usr/bin/ssh
+append-path PATH $basedir/bin

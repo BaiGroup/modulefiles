@@ -1,0 +1,12 @@
+#%Module
+conflict ansible
+
+module-whatis   "Provides Ansible software package"
+
+set homedir $::env(HOME)
+set basedir $homedir/tools/ansible
+setenv ANSIBLE_HOME $basedir
+setenv ANSIBLE_INVENTORY $homedir/.ansible/hosts.ini
+append-path PATH $basedir/bin:$basedir/test/runner
+append-path PYTHONPATH $basedir/lib
+append-path MANPATH $basedir/docs/man

@@ -1,0 +1,12 @@
+cd ~/tools/motif-2.3.5/build
+
+wget ftp://ftp.pbone.net/mirror/ftp.centos.org/6.7/os/x86_64/Packages/libXp-devel-1.0.2-2.1.el6.x86_64.rpm
+rpm2cpio ../libXp-devel-1.0.2-2.1.el6.x86_64.rpm | cpio -id
+rsync pengbai@metropolis1.chem.umn.edu:/usr/lib64/libXp.so.6.2.0 ./
+
+wget ftp://ftp.pbone.net/mirror/ftp.centos.org/6.7/os/x86_64/Packages/openmotif-devel-2.3.3-8.el6.x86_64.rpm
+rpm2cpio ../openmotif-devel-2.3.3-8.el6.x86_64.rpm | cpio -id
+rsync pengbai@metropolis1.chem.umn.edu:/usr/lib64/libXm.so.4.0.3 ./
+rsync pengbai@metropolis1.chem.umn.edu:/usr/lib64/libUil.so.4.0.3 ./
+rsync pengbai@metropolis1.chem.umn.edu:/usr/lib64/libMrm.so.4.0.3 ./
+cp -a lib64/libXm.so lib64/libXm.so.4

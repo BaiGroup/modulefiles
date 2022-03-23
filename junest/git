@@ -1,0 +1,7 @@
+#%Module
+conflict junest
+
+set homedir $::env(HOME)
+
+prepend-path LD_LIBRARY_PATH $homedir/.junest/usr/lib
+prepend-path PATH $homedir/.junest/usr/bin:$homedir/tools/junest/bin

@@ -1,0 +1,37 @@
+# by default some intel compilers put temporaries on the stack
+# this might lead to segmentation faults if the stack limit is set to low
+# stack limits can be increased by sysadmins or e.g with ulimit -s 256000
+# furthermore new ifort (10.0?) compilers support the option
+# -heap-arrays 64
+# add this to the compilation flags is the other options do not work
+# The following settings worked for:
+# - AMD64 Opteron
+# - SUSE Linux Enterprise Server 10.0 (x86_64)
+# - Intel(R) Fortran Compiler for Intel(R) EM64T-based applications, Version 10.0.025
+# - AMD acml library version 3.6.0
+# - MPICH2-1.0.5p4
+# - SCALAPACK library          1.8.0
+#
+# cd ~/tools/cp2k/trunk/cp2k/makefiles; module load intel/12.1 ompi/1.4.4/intel mkl/10.2.7.041; Modify ../arch/Linux-x86-64-intel.popt; make -j 8 ARCH=Linux-x86-64-intel VERSION=popt
+# BLAS: -lmkl_intel_lp64 -lmkl_core -lmkl_sequential #-lmkl_intel_thread -lguide -lpthread
+# SCALAPCK: -lmkl_scalapack_lp64 -lmkl_blacs_openmpi_lp64 -lmkl_lapack95_lp64
+# FFT: -lfftw3xf_intel
+INTEL_INC =/soft/intel/mkl/10.2.7.041/include/fftw
+INTEL_LIB =/soft/intel/mkl/10.2.7.041/lib/em64t
+
+CC       = cc
+CPP      =
+FC       = mpif90
+LD       = mpif90
+AR       = ar -r
+DFLAGS   = -D__INTEL -D__FFTSG -D__parallel -D__BLACS -D__SCALAPACK -D__FFTW3
+CPPFLAGS =
+FCFLAGS  = -I$(INTEL_INC) $(DFLAGS) -O3 -msse2 -heap-arrays 64 -funroll-loops -fpp -free
+FCFLAGS2 = -I$(INTEL_INC) $(DFLAGS) -O1 -msse2 -heap-arrays 64 -fpp -free
+LDFLAGS  = $(FCFLAGS)
+LIBS     = -L$(INTEL_LIB) -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lguide -lpthread -lmkl_scalapack_lp64 -lmkl_blacs_openmpi_lp64 -lmkl_lapack95_lp64 -lfftw3xf_intel
+
+OBJECTS_ARCHITECTURE = machine_intel.o
+
+graphcon.o: graphcon.F
+	$(FC) -c $(FCFLAGS2) $<

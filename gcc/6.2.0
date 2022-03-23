@@ -1,0 +1,18 @@
+#%Module
+conflict gcc
+
+set version "6.2.0"
+module-whatis   "Provides gcc $version compiler"
+set basedir "$::env(HOME)/tools/gcc-$version/bin"
+
+prepend-path PATH $basedir/bin
+prepend-path MANPATH $basedir/share/man
+prepend-path INCLUDE $basedir/include
+prepend-path INCLUDE_PATH $basedir/include
+prepend-path FPATH $basedir/include
+prepend-path CPATH $basedir/include
+prepend-path C_INCLUDE_PATH $basedir/include
+prepend-path CPLUS_INCLUDE_PATH $basedir/include
+prepend-path LD_LIBRARY_PATH $basedir/lib64
+prepend-path LD_RUN_PATH $basedir/lib64
+prepend-path LIBRARY_PATH $basedir/lib64

@@ -1,0 +1,7 @@
+#%Module
+conflict gromacs
+
+set basedir $::env(HOME)/tools/gromacs-5.0.4/build-double
+append-path PATH $basedir/bin
+append-path LD_LIBRARY_PATH $basedir/lib
+append-path MANPATH $basedir/share/man

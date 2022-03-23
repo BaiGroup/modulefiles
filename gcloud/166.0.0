@@ -1,0 +1,5 @@
+#%Module
+conflict gcloud
+
+set basedir $::env(HOME)/tools/google-cloud-sdk
+prepend-path PATH $basedir/bin

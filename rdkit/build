@@ -1,0 +1,6 @@
+module add gmp/6.1.1 mpfr/3.1.4 mpc/1.0.3 gcc/6.2.0 boost/1.61.0
+export RDBASE=$HOME/tools/rdkit
+export LD_LIBRARY_PATH=$RDBASE/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=$RDBASE:$PYTHONPATH
+CC=gcc CXX=g++ cmake .. -DBOOST_ROOT=/panfs/roc/itascasoft/boost/1.61.0 -DBoost_NO_SYSTEM_PATHS=ON -DBoost_USE_STATIC_LIBS=OFF -DPYTHON_LIBRARY=$HOME/tools/conda2/lib/python2.7/config/libpython2.7.a -DPYTHON_INCLUDE_DIR=$HOME/tools/conda2/include/python2.7 -DCMAKE_INSTALL_PREFIX=$HOME/tools/rdkit/bin
+make -j8 && make install

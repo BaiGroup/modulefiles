@@ -1,0 +1,15 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tPathScale EKOPath Compiler Suite."
+}
+
+conflict pathscale
+
+set version "5.0.1"
+module-whatis   "Provides PathScale EKOPath $version Compiler Suite"
+set basedir "/share/apps/ekopath-$version"
+prepend-path PATH $basedir/bin
+prepend-path LD_LIBRARY_PATH $basedir/lib/$version/x8664
+prepend-path INCLUDE_PATH $basedir/include/$version
+prepend-path MANPATH $basedir/docs/man

@@ -1,0 +1,11 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tnedit editting system."
+}
+
+conflict nedit
+
+set version "5.5"
+module-whatis   "Provides nedit $version"
+prepend-path PATH /share/apps/nedit-5.5-Linux-x86

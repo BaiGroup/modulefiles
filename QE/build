@@ -1,0 +1,5 @@
+#module load fftw/3.3.4
+#./configure -enable-parallel -enable-openmp -with-scalapack FFT_LIBS="-lfftw3"
+./configure -enable-parallel -enable-openmp -with-scalapack IFLAGS="-I../include -I/soft/intel/mkl/10.2.7.041/include/fftw" FFT_LIBS="-lfftw3xf_intel"
+# Change -D__FFTW to -D__FFTW3 of DFLAGS in make.sys
+make -j 8 pw cp pp

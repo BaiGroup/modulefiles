@@ -1,0 +1,6 @@
+module load binutils papi/4.4.0 pdt qt intel/12.1 ompi/1.4.4/intel
+./configure --prefix=/home/siepmann/baip/tools/scalasca-1.4.2/build --with-binutils=/soft/binutils/2.22 --with-papi=/home/siepmann/baip/tools/papi-4.4.0/build --with-pdt=/home/siepmann/baip/tools/pdtoolkit-3.18.1/build --with-qmake=/soft/qt/4.8.0/bin/qmake --enable-all-mpi-wrappers
+cd build-linux-intel-openmpi
+Edit Makefile.defs: add -O3 to FDOPT
+make
+make install

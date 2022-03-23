@@ -1,0 +1,22 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for Perl."
+}
+
+conflict perl
+
+set perlbrew_version "0.91"
+set version "5.36.0"
+module-whatis   "Provides Perlbrew $perlbrew_version Perl $version"
+set brewdir "$::env(HOME)/tools/perlbrew"
+set basedir $brewdir/perls/perl-$version
+prepend-path PATH $brewdir/bin:$basedir/bin
+prepend-path MANPATH $basedir/man
+setenv PERLBREW_ROOT $brewdir
+setenv PERLBREW_HOME $brewdir/.perlbrew
+setenv PERLBREW_PATH $brewdir/bin:$basedir/bin
+setenv PERLBREW_MANPATH $basedir/man
+setenv PERLBREW_PERL perl-$version
+setenv PERLBREW_VERSION $perlbrew_version
+setenv PERLBREW_SHELLRC_VERSION $perlbrew_version
+setenv PERLBREW_SKIP_INIT 1

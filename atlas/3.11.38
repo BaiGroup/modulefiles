@@ -1,0 +1,17 @@
+#%Module
+conflict atlas
+
+set version "3.11.38"
+module-whatis   "Provides ATLAS $version"
+set basedir "/share/apps/atlas-$version"
+
+prepend-path PATH $basedir/bin
+prepend-path INCLUDE $basedir/include
+prepend-path INCLUDE_PATH $basedir/include
+prepend-path FPATH $basedir/include
+prepend-path CPATH $basedir/include
+prepend-path C_INCLUDE_PATH $basedir/include
+prepend-path CPLUS_INCLUDE_PATH $basedir/include
+prepend-path LD_LIBRARY_PATH $basedir/lib
+prepend-path LD_RUN_PATH $basedir/lib
+prepend-path LIBRARY_PATH $basedir/lib

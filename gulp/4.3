@@ -1,0 +1,7 @@
+#%Module
+conflict gulp
+
+set basedir $::env(HOME)/tools/gulp-4.3
+setenv GULP_DOC $basedir/Docs
+setenv GULP_LIB $basedir/Libraries
+append-path PATH $basedir/Src

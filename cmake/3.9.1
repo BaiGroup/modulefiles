@@ -1,0 +1,8 @@
+#%Module
+conflict cmake
+
+set version 3.9.1
+set basedir $::env(HOME)/tools/cmake-$version
+
+prepend-path PATH $basedir/bin
+prepend-path MANPATH $basedir/man

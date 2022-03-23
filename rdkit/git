@@ -1,0 +1,14 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tRDKit software package."
+}
+
+conflict rdkit
+
+module-whatis   "Provides the RDKit software package"
+
+set rdkitdir $::env(HOME)/tools/rdkit
+setenv RDBASE $rdkitdir
+append-path LD_LIBRARY_PATH $rdkitdir/lib
+append-path PYTHONPATH $rdkitdir

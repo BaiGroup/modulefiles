@@ -1,0 +1,3 @@
+module load intel/12.1
+./configure -prefix=/home/siepmann/baip/tools/pdtoolkit-3.18.1/build -icpc
+make -j8 install

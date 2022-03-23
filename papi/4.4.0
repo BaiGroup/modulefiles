@@ -1,0 +1,13 @@
+#%Module
+conflict papi
+
+set version 4.4.0
+set homedir $::env(HOME)
+set basedir $homedir/tools/papi-$version/build
+
+prepend-path PATH $basedir/bin
+prepend-path MANPATH $basedir/man
+prepend-path LIBRARY_PATH $basedir/lib
+prepend-path LD_LIBRARY_PATH $basedir/lib
+prepend-path C_INCLUDE_PATH $basedir/include
+prepend-path CPLUS_INCLUDE_PATH $basedir/include

@@ -1,0 +1,7 @@
+#%Module1.0#####################################################################
+conflict qt
+
+set basedir "/share/apps/Qt/5.9.1/gcc_64"
+setenv Qt5_DIR $basedir/lib/cmake
+prepend-path PATH $basedir/bin
+

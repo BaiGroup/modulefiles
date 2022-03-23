@@ -1,0 +1,38 @@
+#%Module
+conflict materialsstudio
+
+set version "6.1"
+module-whatis   "Provides Materials Studio $version software package"
+set msdir "/share/apps/Accelrys/MaterialsStudio$version"
+set lpdir "/share/apps/Accelrys/LicensePack"
+
+setenv MS_INSTALL_ROOT $msdir
+setenv ACCELRYS_LIC_PACK_DIR $lpdir
+setenv ACCELRYS_LICENSE_PLATFORM linux
+setenv MSI_LICENSE_FILE $lpdir/Licenses/msi.lic
+prepend-path LM_LICENSE_FILE $lpdir/Licenses/msi.lic
+prepend-path PATH $msdir/share/license/data:$msdir/share/bin:$msdir/ia32/bin:$lpdir/linux/bin/rt_bin:$msdir/bin
+prepend-path LD_LIBRARY_PATH $lpdir/linux/lib/rt_lib:$lpdir/linux/lib:$msdir/lib:$msdir/lib/32:$msdir/lib/5.8.9/x86_64-linux-thread-multi/CORE
+
+set etcdir "$msdir/etc"
+prepend-path PATH $etcdir/Gateway
+prepend-path PATH $etcdir/AmorphousCell/bin
+prepend-path PATH $etcdir/CASTEP/bin
+prepend-path PATH $etcdir/DFTB/bin
+prepend-path PATH $etcdir/DFTBpara/bin
+prepend-path PATH $etcdir/DPD/bin
+prepend-path PATH $etcdir/Discover/bin
+prepend-path PATH $etcdir/Equilibria/bin
+prepend-path PATH $etcdir/GULP/bin
+prepend-path PATH $etcdir/Gateway
+prepend-path PATH $etcdir/Kinetix/bin
+prepend-path PATH $etcdir/MatServer/bin
+prepend-path PATH $etcdir/MesoDyn/bin
+prepend-path PATH $etcdir/ONETEP/bin
+prepend-path PATH $etcdir/QMERA/bin
+prepend-path PATH $etcdir/Scripting/bin
+prepend-path PATH $etcdir/VAMP/bin
+prepend-path PATH $etcdir/DMol3/bin
+set dmol3_tmpdir "~/dmol3_temp"
+#system "mkdir -p $dmol3_tmpdir"
+setenv DMOL3_TMP $dmol3_tmpdir

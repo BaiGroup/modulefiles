@@ -1,0 +1,4 @@
+module load binutils qt
+./configure --prefix=/home/siepmann/baip/tools/oprofile-0.9.8/build --with-binutils=/soft/binutils/2.22 --enable-gui=no#qt4 --with-qt-dir=/soft/qt/4.8.0 --with-qt-includes=/soft/qt/4.8.0/include --with-qt-libraries=/soft/qt/4.8.0/lib
+make
+make install

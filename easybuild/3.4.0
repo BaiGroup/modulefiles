@@ -1,0 +1,11 @@
+#%Module
+conflict easybuild
+
+set version "3.4.0"
+module-whatis   "Provides EasyBuild $version software build and installation framework"
+set ebdir $::env(HOME)/tools/easybuild
+setenv EASYBUILD_PREFIX $ebdir
+setenv EASYBUILD_MODULES_TOOL EnvironmentModulesC
+setenv EASYBUILD_MODULE_SYNTAX Tcl
+module use --append $ebdir/modules/all
+module add EasyBuild/$version

@@ -1,0 +1,4 @@
+cd ~/tools/gulp-4.0.3/Src
+Modify the Linux portion in getmachine to use options for the Intel compiler and comment out those for the g95 compiler
+make -j 8
+Add environment variables GULP_LIB and GULP_DOC

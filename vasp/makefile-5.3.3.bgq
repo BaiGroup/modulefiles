@@ -1,0 +1,291 @@
+# ================================================
+# Platform =======================================
+# ================================================
+#ifeq ($(PLATFORM),) 
+   #$(error You must specify a platform to compile!) 
+#else
+   #include makefile.inc.$(PLATFORM)
+#endif
+
+ifdef PLATFORM
+   include makefile.inc.$(PLATFORM)
+endif
+
+# ================================================
+# General Variables  =======================================
+# ================================================
+
+DIR_VASP_SRC = $(PWD)
+DIR_VASP_LIB ?= ../vasp.5.lib/
+FILES_LIB_VASP += $(DIR_VASP_LIB)/linpack_double.o 
+SUFFIX ?= default
+FILE_BINARY ?= vasp.$(PLATFORM).$(SUFFIX)
+
+ifeq ($(WANNIER90), y)
+FILE_BINARY = vasp.$(PLATFORM).wannier90
+endif
+
+ifeq ($(VTST), y)
+FILE_BINARY = vasp.$(PLATFORM).vtst
+endif
+
+
+# ================================================
+# Preprocessor ============================
+# ================================================
+
+ifeq ($(GAMMA), y)
+	CPPFLAGS += -DwNGZhalf
+endif
+
+#Control action of CPP when acting of Fortran files
+#C - do not discard comments, P - do not generate C linemarkers, -traditional - act old fashioned?
+FORTRAN_CPPFLAGS =  -traditional -P -C
+#The MPI NXG* and avoidalloc options are VASP documented 
+#IFC turns off the use of EQUIVALENCE in mpi.F - probably a good thing
+#I'm unsure of the meaning of kind8 - but it is the cause of crashes on BGQ
+#VASP_CPPFLAGS += -DIFC -Dkind8 -Davoidalloc
+VASP_CPPFLAGS += -DIFC -Davoidalloc
+
+#Switch for serial/parallel
+ifeq ($(SERIAL), yes)
+  VASP_CPPFLAGS += -DNGXhalf
+  FILE_BINARY := $(FILE_BINARY).serial
+else
+  VASP_CPPFLAGS += -DMPI -DNGZhalf
+endif
+
+CPPFLAGS += $(FORTRAN_CPPFLAGS) $(VASP_CPPFLAGS) $(ADDITIONAL_CPPFLAGS)
+
+# ================================================
+# Linker 
+# ================================================
+
+LDFLAGS += -Wl,-allow-multiple-definition
+#VASP_LIBS = -ldmy $(BLAS_LIBS) $(LAPACK_LIBS) $(BLAS_LIBS) $(MATH_LIBS) $(MPITRACE)
+VASP_LIBS += $(ADDITIONAL_LIBS) 
+
+VASP_LIBRARY_DIRS += -L$(DIR_VASP_LIB) $(ADDITIONAL_LIB_DIRS)
+
+ifeq ($(SCALAPACK), y)
+	CPPFLAGS += -DscaLAPACK
+#VASP_LIBS :=  $(VASP_LIBS) $(SCALAPACK_LIBS) $(BLAS_LIBS)
+#VASP_LIBS :=  $(VASP_LIBS) $(SCALAPACK_LIBS) -llapack $(BLAS_LIBS)
+
+else
+	#This file contains the scalapack dlasrt2 routine
+        #which only appears in davidson_inner 
+	#However it is only used if scaLAPACK is defined. 
+	#So this line seems meaningless ... leaving it for now
+	FILES_LIB_VASP += $(DIR_VASP_LIB)/dlasrt2.o
+endif
+
+# ================================================
+# FFT 
+# ================================================
+
+
+ifeq ($(FFT), essl)
+	FILES_OBJ_FFT3D = $(FFT_EXTRA_FILES) fftmpi$(FFT_SUFFIX).o fftmpi_map.o fft3d-essl.o fft3dlib.o
+else
+	FILES_OBJ_FFT3D  = fftmpi.o fftmpi_map.o fft3dfurth.o fft3dlib.o
+endif
+
+ifeq ($(FFT), mkl)
+	FILES_OBJ_FFT3D = $(FFT_EXTRA_FILES) fftmpi$(FFT_SUFFIX).o fftmpi_map.o fftw3d.o fft3dlib.o
+endif
+
+# ================================================
+# Files #2 =======================================
+# ================================================
+
+FILES_OBJ_BASIC = symmetry.o symlib.o lattlib.o  random.o   
+
+FILES_OBJ_SOURCE=  base.o     mpi.o      smart_allocate.o      xml.o  \
+         constant.o jacobi.o   main_mpi.o  scala.o   \
+         asa.o      lattice.o  poscar.o   ini.o  mgrid.o  xclib.o  vdw_nl.o  xclib_grad.o \
+         radial.o   pseudo.o   gridq.o     ebs.o  \
+         mkpoints.o wave.o     wave_mpi.o  wave_high.o  spinsym.o \
+         $(FILES_OBJ_BASIC)   nonl.o     nonlr.o    nonl_high.o dfast.o    choleski2.o \
+         mix.o      hamil.o    xcgrad.o   xcspin.o    potex1.o   potex2.o  \
+         constrmag.o cl_shift.o relativistic.o LDApU.o \
+         paw_base.o metagga.o  egrad.o    pawsym.o   pawfock.o  pawlhf.o   rhfatm.o  hyperfine.o paw.o   \
+         mkpoints_full.o       charge.o   Lebedev-Laikov.o  stockholder.o dipol.o    pot.o \
+         dos.o      elf.o      tet.o      tetweight.o hamil_rot.o \
+         $(VTST_OBJ) dyna.o     k-proj.o    sphpro.o    us.o  core_rel.o \
+         aedens.o   wavpre.o   wavpre_noio.o broyden.o \
+         dynbr.o    hamil_high.o  rmm-diis.o reader.o   writer.o   tutor.o xml_writer.o \
+         brent.o    stufak.o   fileio.o   opergrid.o stepver.o  \
+         chgloc.o   fast_aug.o fock_multipole.o  fock.o  mkpoints_change.o sym_grad.o \
+         mymath.o   internals.o npt_dynamics.o   dynconstr.o dimer_heyden.o dvvtrajectory.o vdwforcefield.o \
+         nmr.o      pead.o     subrot.o   subrot_scf.o \
+         force.o    pwlhf.o    gw_model.o optreal.o  steep.o    davidson.o  david_inner.o \
+         electron.o rot.o  electron_all.o shm.o    pardens.o  paircorrection.o \
+         optics.o   constr_cell_relax.o   stm.o    finite_diff.o elpol.o    \
+         hamil_lr.o rmm-diis_lr.o  subrot_cluster.o subrot_lr.o \
+         lr_helper.o hamil_lrf.o   elinear_response.o ilinear_response.o \
+         linear_optics.o \
+         setlocalpp.o  wannier.o electron_OEP.o electron_lhf.o twoelectron4o.o \
+         mlwf.o     ratpol.o screened_2e.o wave_cacher.o chi_base.o wpot.o \
+         local_field.o ump2.o ump2kpar.o fcidump.o ump2no.o \
+         bse_te.o bse.o acfdt.o chi.o sydmat.o dmft.o \
+         rmm-diis_mlr.o  linear_response_NMR.o wannier_interpol.o linear_response.o
+
+# ================================================
+# Target Groups  ==========================================
+# ================================================
+
+#Source Files
+FILES_SRC_F := $(wildcard *.F)
+FILES_SRC_C := $(wildcard *.c)
+FILES_SRC_F90 := $(patsubst %.F, %.f90, $(FILES_SRC_F))
+FILES_SRC_INC := $(wildcard *.inc)
+
+#Divide the object files to be built into classes based on optimization
+FILES_OBJ_C := $(patsubst %.c, %.o, $(FILES_SRC_C))
+FILES_OBJ := $(patsubst %.F, %.o, $(FILES_SRC_F))
+FILES_OBJ_OPTIMIZATION_NOVEC += cl_shift.o LDApU.o us.o wave.o
+FILES_OBJ_OPTIMIZATION_O2 += fft3dlib.o radial.o nonl.o paw.o subrot.o rot.o pead.o 
+FILES_OBJ_OPTIMIZATION_O1 += fft3dfurth.o  fftmpiw.o fftw3d.o wave_high.o 
+#FILES_OBJ_OPTIMIZATION_O1 += fft3dfurth.o fftmpi.o fftmpiw.o fftw3d.o wave_high.o 
+FILES_OBJ_OPTIMIZATION_O0 = main.o
+FILES_MOD := $(wildcard *.mod)
+ELPA_OBJ := $(wildcard elpa*.o)
+
+# ================================================
+# Rules ==========================================
+# ================================================
+all: help
+
+ifeq ($(printMap), y)
+   LDFLAGS += --print-map
+endif
+
+vasp: build preprocess $(FILES_ELPA) $(FILES_LIB_VASP) $(FILES_OBJ_SOURCE) $(FILES_OBJ_FFT3D) $(FILES_OBJ_EXTRA) main.o
+	$(RM) $(FILE_BINARY)
+	$(FC) $(FFLAGS_BASE) $(LDFLAGS) $(VASP_LIBRARY_DIRS) -o $(FILE_BINARY) main.o  $(FILES_ELPA) $(FILES_OBJ_SOURCE) $(FILES_OBJ_FFT3D) $(FILES_OBJ_EXTRA) $(FILES_LIB_VASP) $(VASP_LIBS) 
+
+preprocess: $(FILES_SRC_F90)
+
+clean: clean_vasp
+
+clean_vasp:
+	cd $(DIR_VASP_SRC); $(RM) $(FILE_BINARY) $(FILES_OBJ) $(ELPA_OBJ) $(FILES_MOD) $(FILES_SRC_F90)
+
+clean_lib: 
+	cd $(DIR_VASP_LIB); $(RM) *.a *.o
+
+$(FILES_LIB_VASP):
+	cd $(DIR_VASP_LIB); $(MAKE)
+
+$(FILES_SRC_F90): %.f90: %.F
+	./preprocess < $< | cpp $(CPPFLAGS) > $@
+
+$(FILES_OBJ_C): %.o: %.c
+	$(CC) $(ADDITIONAL_CPPFLAGS) -O3 $(INCLUDE) -c $< -o $@
+
+$(FILES_OBJ): %.o: %.f90
+	$(FC) $(FFLAGS_BASE) $(FFLAGS_OPTIMIZATION_STANDARD) $(INCLUDE) -c $< -o $@
+
+$(FILES_OBJ_OPTIMIZATION_O2): %.o: %.f90
+	echo $< $@
+	$(FC) $(FFLAGS_BASE) $(FFLAGS_OPTIMIZATION_O2) $(INCLUDE) -c $< -o $@
+
+$(FILES_OBJ_OPTIMIZATION_O1): %.o: %.f90
+	$(FC) $(ADDITIONAL_INCLUDE_DIRS) $(FFLAGS_BASE) $(FFLAGS_OPTIMIZATION_O1) $(INCLUDE) -c $< -o $@
+
+$(FILES_OBJ_OPTIMIZATION_O0): %.o: %.f90
+	$(FC) $(FFLAGS_BASE) $(FFLAGS_OPTIMIZATION_O0) $(INCLUDE) -c $< -o $@
+
+$(FILES_OBJ_OPTIMIZATION_NOVEC): %.o: %.f90
+	$(FC) $(FFLAGS_BASE) $(FFLAGS_OPTIMIZATION_NOVEC) $(INCLUDE) -c $< -o $@
+
+$(FILES_OBJ_OPTIMIZATION_NOOPENMP): %.o: %.f90
+	$(FC) $(FFLAGS_BASE) $(FFLAGS_OPTIMIZATION_NOOPENMP) $(INCLUDE) -c $< -o $@
+
+# ELPA rules
+elpa1.o : elpa1.f90
+	$(FC) $(FFLAGS_BASE) $(FFLAGS_OPTIMIZATION_NOOPENMP) -c $< -o $@
+elpa2.o : elpa2.f90 elpa1.o
+	$(FC) $(FFLAGS_BASE) $(FFLAGS_OPTIMIZATION_NOOPENMP) -c $< -o $@
+elpa2_kernels.o : elpa2_kernels.f90 elpa1.o
+	$(FC) $(FFLAGS_BASE) $(FFLAGS_OPTIMIZATION_NOOPENMP) -c $< -o $@   	    
+
+-include $(PWD)/make.deps_bgq
+
+install:
+	cp  $(FILE_BINARY) $(HOME)/bin/$(FILE_BINARY)
+
+help:
+	@echo "=================================================="
+	@echo "Help ============================================="
+	@echo "=================================================="
+	@echo
+	@echo "Usage: make <Target> <Options>"
+	@echo
+	@echo "Targets:"
+	@echo " - vasp    -> Build VASP"
+	@echo " - clean   -> Clean build files"
+	@echo " - display -> Display build environment"
+	@echo " - help    -> Display makefile usage"
+	@echo
+	@echo "Options:"
+	@echo " - PLATFORM={ <Platform> } -> Build for specified target. File makefile.inc.ibm.<PLATFORM> must exist!"
+	@echo " - GAMMA={ n | y }	      -> Build Gamma version [Default: $(GAMMA)]"
+	@echo " - MULTITHREADS={ n | y }  -> Build multi-threaded binary through automatic parallelization [Default: $(MULTITHREADS)]"
+	@echo " - SCALAPACK={ n | y }     -> Use ScaLAPACK [Default: $(SCALAPACK)]"
+	@echo " - TUNE={ n | y }     	  -> Tune for BGQ using qtune=qp -qhot=level1 "
+	@echo " - O2={ n | y }     	  -> compiler all in O2 [Default: n] "
+	@echo " - FFT={ essl | mkl | default }      -> Use specified FFT [Default: $(FFT)]"
+	@echo " - OMP={ auto | manual | none }      -> Setting for qsmp compiler flag [Default: $(FFT)]"
+	@echo " - ELPA={ 1 | 2 }          -> Enable ELPA library version 1 or 2 [Default: none] "
+	@echo " - SCALA={ 1 | 2 }         -> Scalapack version: 1=1.8 - 2=2.0 [Default: 2] "
+	@echo " - WANNIER90={ y | n }     -> link with Wannier90 library [Default: n], not available in this version "
+	@echo " - VTST={ y | n }          -> enable VTST model [Default: n], not available in this version "
+	@echo
+	@echo "Available Platforms:"
+	@echo " -> $(patsubst makefile.inc.%, %, $(wildcard makefile.inc.*))"
+	@echo 
+
+build:
+	@echo "=================================================="
+	@echo "Build Settings ==================================="
+	@echo "=================================================="
+	@echo
+	@echo "Build Options:"
+	@echo "- CC		= [$(CC)]"
+	@echo "- FC   		= [$(FC)]"
+	@echo "- PLATFORM	= [$(PLATFORM)]"
+	@echo "- EXECUTABLE 	= [$(FILE_BINARY)]"
+	@echo "- GAMMA  	= [$(GAMMA)]"
+	@echo "- MULTITHREADS	= [$(MULTITHREADS)]"
+	@echo "- SCALAPACK	= [$(SCALAPACK)]"
+	@echo "- FFT		= [$(FFT)]"
+	@echo "- TUNE		= [$(TUNE)]"
+	@echo "- OMP		= [$(OMP)]"
+	@echo
+	@echo "Special Files:"
+	@echo "- O0 optimized files	= [$(FILES_OBJ_OPTIMIZATION_O0)]" 
+	@echo "- O1 optimized files	= [$(FILES_OBJ_OPTIMIZATION_O1)]" 
+	@echo "- O2 optimized files	= [$(FILES_OBJ_OPTIMIZATION_O2)]" 
+	@echo "- No OMP files		= [$(FILES_OBJ_OPTIMIZATION_NOOPENMP)]" 
+	@echo "- No Vector files	= [$(FILES_OBJ_OPTIMIZATION_NOVEC)]" 
+	@echo "- FFT files		= [$(FILES_OBJ_FFT3D)]" 
+	@echo "- C files		= [$(FILES_SRC_C)]" 
+	@echo
+	@echo "Flags:"
+	@echo "- Pre-Processing Flags	= [$(CPPFLAGS)]" 
+	@echo "- Std. Flags     	= [$(FFLAGS_BASE)]"
+	@echo "- Link Flags		= [$(LDFLAGS)]"
+	@echo "- Libraries		= [$(VASP_LIBS)]"
+	@echo
+	@echo "Header and Library Paths:"
+	@echo "- Includes		= [$(INCLUDE)]"
+	@echo "- LAPACK Location        = [$(LAPACK_LIB_DIR)]"
+	@echo "- SCALAPACK Location     = [$(SCALAPACK_LIB_DIR)]"
+	@echo "- BLAS Location          = [$(BLAS_LIB_DIR)]"
+	@echo "- MATH Location          = [$(MATH_LIB_DIR)]"
+	@echo
+	@echo "VASP libraries:"
+	@echo "- VASP_LIBS              = [$(VASP_LIBS)]"
+	@echo

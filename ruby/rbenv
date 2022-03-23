@@ -1,0 +1,7 @@
+#%Module1.0#####################################################################
+conflict ruby
+
+set basedir "$::env(HOME)/tools/rbenv"
+setenv RBENV_ROOT $basedir
+setenv RBENV_SHELL [file tail $::env(SHELL)]
+prepend-path PATH $basedir/shims:$basedir/bin

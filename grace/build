@@ -1,0 +1,5 @@
+module add gcc/5.1.0 motif/2.3.3
+cd ~/tools/grace-5.1.23
+./configure --prefix=$HOME/tools/grace-5.1.23/build --enable-grace-home=$HOME/tools/grace-5.1.23/build
+make -j 8
+make install

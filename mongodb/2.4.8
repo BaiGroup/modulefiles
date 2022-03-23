@@ -1,0 +1,8 @@
+#%Module
+conflict mongodb
+
+set version 2.4.8
+set arch linux-x86_64
+set basedir $::env(HOME)/tools/mongodb-$arch-$version
+
+prepend-path PATH $basedir/bin

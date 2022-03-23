@@ -1,0 +1,14 @@
+#%Module
+conflict scalasca
+
+set version 1.4.2
+set homedir $::env(HOME)
+set basedir $homedir/tools/scalasca-1.4.2/build
+
+setenv SCALASCA_DIR $basedir
+
+prepend-path PATH $basedir/bin
+prepend-path LIBRARY_PATH $basedir/lib
+prepend-path LD_LIBRARY_PATH $basedir/lib
+prepend-path C_INCLUDE_PATH $basedir/include
+prepend-path CPLUS_INCLUDE_PATH $basedir/include

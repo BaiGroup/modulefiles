@@ -1,0 +1,9 @@
+#%Module
+conflict pysimm
+
+module-whatis   "Provides the Python Simulation Interface for Molecular Modeling software"
+
+set pysimmdir $::env(HOME)/tools/pysimm
+append-path PYTHONPATH $pysimmdir
+append-path PATH $pysimmdir/bin
+setenv LAMMPS_EXEC lmp

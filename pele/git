@@ -1,0 +1,12 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tpele suite of scripts."
+}
+
+conflict pele
+
+module-whatis   "Provides the pele suite of scripts"
+
+set peledir $::env(HOME)/tools/pele
+append-path PYTHONPATH $peledir

@@ -1,0 +1,8 @@
+#%Module
+conflict android-sdk
+
+set basedir "$::env(HOME)/tools/android-sdk"
+prepend-path PATH $basedir/tools:$basedir/platform-tools:$basedir/lldb/2.2/bin:$basedir/ndk-bundle
+setenv ANDROID_HOME $basedir
+setenv ANDROID_NDK $basedir/ndk-bundle
+setenv ANDROID_EMULATOR_FORCE_32BIT "true"

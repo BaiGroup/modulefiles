@@ -1,0 +1,2 @@
+module load java papi binutils expat
+./configure --prefix=/home/siepmann/baip/tools/perfsuite-1.1.2/build --enable-java --with-mpi --with-papi=/soft/papi/5.0.1

@@ -1,0 +1,9 @@
+./configure --prefix=/home/siepmann/baip/tools/valgrind-3.8.1/build
+make
+make install
+
+KCacheGrind:
+module load qt
+./configure --prefix=/home/siepmann/baip/tools/kcachegrind-0.4.6/build --with-qt-dir=/soft/qt/4.8.0 --with-qt-includes=/soft/qt/4.8.0/include --with-qt-libraries=/soft/qt/4.8.0/lib --disable-mt
+make
+make install

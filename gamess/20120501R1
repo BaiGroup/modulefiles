@@ -1,0 +1,5 @@
+#%Module
+conflict gamess
+
+set gmsroot $::env(HOME)/tools/gamess
+append-path PATH  $gmsroot:$gmsroot/tools

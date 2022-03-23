@@ -1,0 +1,13 @@
+##################################################
+module add gcc/5.1.0
+python setup.py build_ext -i --fcompiler=gfortran
+##################################################
+Cinfony:
+python setup.py install --user
+##################################################
+Atomic Simulation Environment
+python setup.py install --user
+##################################################
+pymatgen
+pip install pymatgen
+##################################################

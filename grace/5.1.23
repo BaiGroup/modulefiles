@@ -1,0 +1,8 @@
+#%Module
+conflict grace
+
+module add motif/2.3.3
+
+set basedir $::env(HOME)/tools/grace-5.1.23/build
+prepend-path PATH $basedir/bin
+prepend-path MANPATH $basedir/doc

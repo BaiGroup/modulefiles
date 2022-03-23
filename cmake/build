@@ -1,0 +1,2 @@
+./bootstrap --parallel=8 --prefix=/home/siepmann/baip/tools/cmake-2.8.10.2/build
+make -j8 install

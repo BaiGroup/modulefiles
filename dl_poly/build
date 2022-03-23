@@ -1,0 +1,4 @@
+cd ~/tools/dl_poly_4.03
+cp -a build/Makefile_MPI source/Makefile
+cd source
+make hpc # "-j 8" does not work

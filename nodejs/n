@@ -1,0 +1,8 @@
+#%Module1.0#####################################################################
+conflict nodejs
+
+set homedir "$::env(HOME)"
+set basedir $homedir/tools/n
+setenv N_PREFIX $basedir
+prepend-path PATH $basedir/bin:$homedir/.yarn/bin
+prepend-path NODE_PATH $basedir/lib/node_modules:$homedir/.config/yarn/global/node_modules

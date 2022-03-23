@@ -1,0 +1,10 @@
+#%Module
+conflict nwchem
+
+set homedir $::env(HOME)
+set nwroot $homedir/tools/nwchem-6.1
+
+setenv NWCHEM_NWPW_LIBRARY  $nwroot/src/nwpw/libraryps/
+setenv NWCHEM_BASIS_LIBRARY $nwroot/src/basis/libraries/
+
+append-path PATH  $nwroot/bin/LINUX64

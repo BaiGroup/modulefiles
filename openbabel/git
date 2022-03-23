@@ -1,0 +1,14 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tOpen Babel software package."
+}
+
+conflict openbabel
+
+module-whatis   "Provides the Open Babel software package"
+
+set obabeldir $::env(HOME)/tools/openbabel/bin
+append-path PATH $obabeldir/bin
+append-path LD_LIBRARY_PATH $obabeldir/lib
+append-path PYTHONPATH $obabeldir/lib/python2.7/site-packages

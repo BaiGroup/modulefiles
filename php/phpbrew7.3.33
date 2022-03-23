@@ -1,0 +1,20 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for PHP."
+}
+
+conflict php
+
+set version "7.3.33"
+module-whatis   "Provides PHP $version via phpbrew"
+set brewdir "$::env(HOME)/tools/phpbrew"
+set basedir $brewdir/.phpbrew/php/php-$version
+setenv PHPBREW_PHP php-$version
+setenv PHPBREW_SET_PROMPT 1
+setenv PHPBREW_RC_ENABLE 1
+setenv PHPBREW_HOME $brewdir/.phpbrew
+setenv PHPBREW_ROOT $brewdir/.phpbrew
+setenv PHPBREW_PATH $basedir
+prepend-path PATH $basedir/bin:$brewdir/bin
+prepend-path LD_LIBRARY_PATH $basedir/lib
+prepend-path MANPATH $basedir/php/man

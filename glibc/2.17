@@ -1,0 +1,7 @@
+#%Module
+conflict glibc
+
+set basedir $::env(HOME)/tools/glibc-2.17/build
+append-path PATH $basedir/bin
+append-path LD_LIBRARY_PATH $basedir/lib
+append-path MANPATH $basedir/share/man

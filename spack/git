@@ -1,0 +1,10 @@
+#%Module
+conflict spack
+
+module-whatis   "Provides Spack package manager"
+
+set spackdir $::env(HOME)/tools/spack
+setenv SPACK_ROOT $spackdir
+append-path PATH $spackdir/bin
+set arch [exec $spackdir/bin/spack arch]
+module use --append $spackdir/share/spack/modules/$arch
