@@ -1,0 +1,93 @@
+#%Module
+conflict intel
+
+set version "2022.1.2"
+module-whatis "Provides Intel OneAPI $version"
+
+set          install_root        /share/apps/intel/oneapi_2022.1.2
+setenv       ONEAPI_ROOT         $install_root
+
+# Cluster Checker
+set          clck_root           $install_root/clck/2021.5.0
+setenv       CLCK_ROOT           $clck_root
+prepend-path CPLUS_INCLUDE_PATH  $clck_root/include
+setenv       INTEL_LICENSE_FILE  $clck_root/licensing
+prepend-path LIBRARY_PATH        $clck_root/lib/intel64
+prepend-path MANPATH             $clck_root/man
+prepend-path PATH                $clck_root/bin/intel64
+
+# Compiler
+set          compiler_root       $install_root/compiler/2022.0.2
+prepend-path CMAKE_PREFIX_PATH   $compiler_root/linux/IntelDPCPP
+setenv       CMPLR_ROOT          $compiler_root
+setenv       FPGA_VARS_DIR       $compiler_root/2022.0.2/linux/lib/oclfpga
+prepend-path INTELFPGAOCLSDKROOT $compiler_root/linux/lib/oclfpga
+prepend-path LD_LIBRARY_PATH     $compiler_root/linux/lib:$compiler_root/linux/lib/x64:$compiler_root/linux/lib/oclfpga/host/linux64/lib:$compiler_root/linux/compiler/lib/intel64_lin
+prepend-path LIBRARY_PATH        $compiler_root/linux/compiler/lib/intel64_lin:$compiler_root/linux/lib
+prepend-path MANPATH             $compiler_root/documentation/en/man/common
+prepend-path NLSPATH             $compiler_root/linux/compiler/lib/intel64_lin/locale/%l_%t/%N
+prepend-path OCL_ICD_FILENAMES   libintelocl_emu.so:libalteracl.so:$compiler_root/linux/lib/x64/libintelocl.so
+prepend-path PATH                $compiler_root/linux/lib/oclfpga/bin:$compiler_root/linux/bin/intel64:$compiler_root/linux/bin
+prepend-path PKG_CONFIG_PATH     $compiler_root/lib/pkgconfig
+
+# Debugger
+set          debugger_root       $install_root/debugger/2021.5.0
+prepend-path GDB_INFO            $debugger_root/documentation/info
+prepend-path INFOPATH            $debugger_root/gdb/intel64/lib
+setenv       INTEL_PYTHONHOME    $debugger_root/dep
+prepend-path LD_LIBRARY_PATH     $debugger_root/gdb/intel64/lib:$debugger_root/libipt/intel64/lib:$debugger_root/dep/lib
+prepend-path MANPATH             $debugger_root/documentation/man
+prepend-path PATH                $debugger_root/gdb/intel64/bin
+
+# Tools and Utilities
+set          dev_util            $install_root/dev-utilities/2021.5.2
+prepend-path CPATH               $dev_util/include
+prepend-path PATH                $dev_util/bin
+
+# Inspector
+set          inspector_path      $install_root/inspector/2022.0.0
+setenv       INSPECTOR_2022_DIR  $inspector_path
+prepend-path PATH                $inspector_path/bin64
+prepend-path PKG_CONFIG_PATH     $inspector_path/include/pkgconfig/lib64
+
+# Math Kernel Library
+set          mkl_root            $install_root/mkl/2022.0.2
+prepend-path CPATH               $mkl_root/include
+prepend-path LD_LIBRARY_PATH     $mkl_root/lib/intel64
+prepend-path LIBRARY_PATH        $mkl_root/lib/intel64
+setenv       MKLROOT             $mkl_root
+prepend-path NLSPATH             $mkl_root/lib/intel64/locale/%l_%t/%N
+prepend-path PATH                $mkl_root/bin/intel64
+prepend-path PKG_CONFIG_PATH     $mkl_root/lib/pkgconfig
+
+# MPI framework
+set          mpi_root            $install_root/mpi/2021.5.1
+prepend-path CLASSPATH           $mpi_root/lib/mpi.jar
+prepend-path CPATH               $mpi_root/include
+prepend-path FI_PROVIDER_PATH    $mpi_root/libfabric/lib/prov
+setenv       I_MPI_ROOT          $mpi_root
+prepend-path LD_LIBRARY_PATH     $mpi_root/libfabric/lib:$mpi_root/lib/release:$mpi_root/lib
+prepend-path LIBRARY_PATH        $mpi_root/libfabric/lib:$mpi_root/lib/release:$mpi_root/lib
+prepend-path MANPATH             $mpi_root/man
+prepend-path PATH                $mpi_root/libfabric/bin:$mpi_root/bin
+prepend-path PKG_CONFIG_PATH     $mpi_root/lib/pkgconfig
+
+# Thread Building Blocks
+set          tbb_root            $install_root/tbb/2021.5.1
+prepend-path CMAKE_PREFIX_PATH   $tbb_root
+prepend-path CPATH               $tbb_root/include
+prepend-path LD_LIBRARY_PATH     $tbb_root/lib/intel64/gcc4.8
+prepend-path LIBRARY_PATH        $tbb_root/lib/intel64/gcc4.8
+prepend-path PKG_CONFIG_PATH     $tbb_root/lib/pkgconfig
+setenv       TBBROOT             $tbb_root
+
+# Trace Analyzer and Collector
+set          itac_root           $install_root/itac/2021.5.0
+prepend-path LD_LIBRARY_PATH     $itac_root/slib
+prepend-path MANPATH             $itac_root/man
+prepend-path PATH                $itac_root/bin
+setenv       VT_ADD_LIBS         "-ldwarf -lelf -lvtunwind -lm -lpthread"
+setenv       VT_LIB_DIR          $itac_root/lib
+setenv       VT_MPI              impi4
+setenv       VT_ROOT             $itac_root
+setenv       VT_SLIB_DIR         $itac_root/slib

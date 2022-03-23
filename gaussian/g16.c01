@@ -1,0 +1,23 @@
+#%Module
+
+set gr "/share/apps/gaussian/g16.c01.avx2/g16"
+set gvr "/share/apps/gaussian/gaussview-6.0.16"
+
+setenv g16root $gr
+setenv GAUSS_MEMDEF 100000000
+setenv GAUSS_EXEDIR $gr/bsd:$gr/local:$gr/extras:$gr
+setenv PERLLIB $gr/bsd
+setenv _DSM_BARRIER SHM
+setenv _RLD_ARGS "\"-log /dev/null\""
+setenv GDVBASIS $gr/basis
+setenv GAUSS_LEXEDIR $gr/linda-exe
+setenv GAUSS_LFLAGS "\ -workerwait\ 900\ -opt\ \"Tsnet.Node.lindarsharg:\ ssh\ \" "
+append-path PATH $gr/bsd:$gr:$gr/bin:$gvr/bin
+append-path LD_LIBRARY_PATH $gr/bsd:$gr/local:$gr/extras:$gr:$gvr/lib:$gvr/lib/MesaGL
+append-path MANPATH $gr/bsd
+append-path LIBPATH $gvr/lib
+
+setenv GV_DIR $gvr
+append-path PATH $gvr
+#set-alias gv "$gvr/gview.exe &"
+#set-alias gvx "$gvr/gview.exe -Xmode &"

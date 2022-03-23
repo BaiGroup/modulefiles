@@ -1,0 +1,13 @@
+#%Module
+conflict impi
+
+set basedir "/share/apps/intel/impi/5.0.3.048"
+setenv       I_MPI_ROOT         $basedir
+prepend-path PATH               $basedir/intel64/bin
+prepend-path LD_LIBRARY_PATH    $basedir/intel64/lib
+prepend-path MANPATH            $basedir/man
+prepend-path CPATH              $basedir/intel64/include
+prepend-path FPATH              $basedir/intel64/include
+prepend-path C_INCLUDE_PATH     $basedir/intel64/include
+prepend-path CPLUS_INCLUDE_PATH $basedir/intel64/include
+prepend-path INCLUDE            $basedir/intel64/include

@@ -1,0 +1,17 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for Python."
+}
+
+conflict python
+
+set version "3.9"
+module-whatis   "Provides Conda Python $version"
+set condadir /share/apps/conda
+set basedir $condadir/envs/conda$version
+prepend-path PATH $basedir/bin:$condadir/condabin
+prepend-path MANPATH $basedir/share/man
+setenv CONDA_EXE $condadir/bin/conda
+setenv CONDA_PREFIX $basedir
+setenv CONDA_PYTHON_EXE $condadir/bin/python
+setenv CONDA_DEFAULT_ENV conda$version

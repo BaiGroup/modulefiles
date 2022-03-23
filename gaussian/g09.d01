@@ -1,0 +1,25 @@
+#%Module
+
+conflict gaussian
+
+set gr "/share/apps/gaussian/g09.d01"
+set gvr "/share/apps/gaussian/gaussview-5.08"
+
+setenv g09root $gr
+setenv GAUSS_MEMDEF 100000000
+setenv GAUSS_EXEDIR $gr/bsd:$gr/local:$gr/extras:$gr
+setenv PERLLIB $gr/bsd
+setenv _DSM_BARRIER SHM
+setenv _RLD_ARGS "\"-log /dev/null\""
+setenv GDVBASIS $gr/basis
+setenv GAUSS_LEXEDIR $gr/linda-exe
+setenv GAUSS_LFLAGS "\ -workerwait\ 250000\ -opt\ \"Tsnet.Node.lindarsharg:\ ssh\ \" "
+append-path PATH $gr/bsd:$gr:$gr/bin:$gvr/bin
+append-path LD_LIBRARY_PATH $gr/bsd:$gr/local:$gr/extras:$gr:$gvr/lib:$gvr/lib/MesaGL
+append-path MANPATH $gr/bsd
+append-path LIBPATH $gvr/lib
+
+setenv GV_DIR $gvr
+append-path PATH $gvr
+#set-alias gv "$gvr/gview &"
+#set-alias gvx "$gvr/gv -Xmode &"

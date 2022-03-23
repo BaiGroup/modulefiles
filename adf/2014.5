@@ -1,0 +1,18 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tADF program."
+}
+
+conflict adf
+
+set version "2014.5"
+
+module-whatis   "Provides ADF $version"
+prepend-path PATH /share/apps/adf-2014.05/bin
+
+setenv ADFHOME /share/apps/adf-2014.05
+setenv ADFBIN /share/apps/adf-2014.05/bin
+setenv ADFRESOURCES /share/apps/adf-2014.05/atomicdata
+setenv SCMLICENSE /share/apps/adf-2014.05/license.txt
+setenv SCM_TMPDIR /share/$env(USER)/space1

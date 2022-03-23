@@ -1,0 +1,14 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tOpen64 Compiler Suite."
+}
+
+conflict open64
+
+set version "5.0"
+module-whatis   "Provides Open64 $version Compiler Suite"
+set basedir "/share/apps/open64"
+prepend-path PATH $basedir/bin
+prepend-path LD_LIBRARY_PATH $basedir/lib/gcc-lib/x86_64-open64-linux/$version:$basedir/lib/gcc-lib/x86_64-open64-linux/$version/32:$basedir/lib/gcc-lib/x86_64-open64-linux/$version/64
+prepend-path INCLUDE_PATH $basedir/include/$version

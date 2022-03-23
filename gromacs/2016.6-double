@@ -1,0 +1,6 @@
+#%Module
+conflict gromacs
+
+set basedir /share/apps/gromacs-2016.6/gcc-double-impi-fftw
+append-path PATH $basedir/bin
+append-path LD_LIBRARY_PATH $basedir/lib

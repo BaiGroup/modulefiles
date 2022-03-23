@@ -1,0 +1,8 @@
+#%Module
+conflict lammps
+
+set basedir /share/apps/lammps/git
+append-path PATH $basedir/build:$basedir/tools/python:$basedir/tools/ch2lmp
+append-path LD_LIBRARY_PATH $basedir/build
+append-path PYTHONPATH $basedir/python
+setenv LAMMPS_PYTHON_TOOLS $basedir/tools/python/pizza

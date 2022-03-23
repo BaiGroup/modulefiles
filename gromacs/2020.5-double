@@ -1,0 +1,6 @@
+#%Module
+conflict gromacs
+
+set basedir /share/apps/gromacs-2020.5/gcc-double-impi-fftw3
+append-path PATH $basedir/bin
+append-path LD_LIBRARY_PATH $basedir/lib

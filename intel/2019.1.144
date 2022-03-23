@@ -1,0 +1,73 @@
+#%Module
+conflict intel
+
+set version "2019.1.144"
+module-whatis "Provides Intel Parallel Studio XE $version"
+set install_root /share/apps/intel/2019/parallel_studio_xe_msi
+set cl_root $install_root/compilers_and_libraries_$version/linux
+setenv INTEL_LICENSE_FILE /share/apps/intel/Licenses/license.lic
+
+#daal environment
+set daal_root $cl_root/daal
+setenv       DAALROOT          $daal_root
+prepend-path CPATH             $daal_root/include
+prepend-path LIBRARY_PATH      $daal_root/lib/intel64_lin:$daal_root/../tbb/lib/intel64_lin/gcc4.7
+prepend-path LD_LIBRARY_PATH   $daal_root/lib/intel64_lin:$daal_root/../tbb/lib/intel64_lin/gcc4.7
+prepend-path CLASSPATH         $daal_root/lib/daal.jar
+
+#debugger environment
+set debugger_root $install_root/debugger_2019
+setenv       INTEL_PYTHONHOME   $debugger_root/python/intel64
+prepend-path PATH               $debugger_root/gdb/intel64/bin
+prepend-path LD_LIBRARY_PATH    $debugger_root/libipt/intel64/lib
+prepend-path MANPATH            $install_root/documentation_2019/en/debugger/gdb-ia/man
+prepend-path INFOPATH           $install_root/documentation_2019/en/debugger/gdb-ia/info
+prepend-path NLSPATH            $debugger_root/gdb/intel64/share/locale/%l_%t/%N
+
+#tbb environment
+set tbb_root $cl_root/tbb
+setenv       TBBROOT             $tbb_root
+prepend-path LD_LIBRARY_PATH     $tbb_root/lib/intel64/gcc4.7
+prepend-path LIBRARY_PATH        $tbb_root/lib/intel64/gcc4.7
+prepend-path CPATH               $tbb_root/include
+
+#pstl environment
+set pstl_root $cl_root/pstl
+setenv       PSTLROOT            $pstl_root
+prepend-path CPATH               $pstl_root/include:$tbb_root/include
+
+#mkl environment
+set mkl_root $cl_root/mkl
+setenv       MKLROOT             $mkl_root
+prepend-path LD_LIBRARY_PATH     $cl_root/tbb/lib/intel64_lin/gcc4.7:$cl_root/compiler/lib/intel64_lin:$mkl_root/lib/intel64_lin
+prepend-path LIBRARY_PATH        $cl_root/tbb/lib/intel64_lin/gcc4.7:$cl_root/compiler/lib/intel64_lin:$mkl_root/lib/intel64_lin
+prepend-path NLSPATH             $mkl_root/lib/intel64_lin/locale/%l_%t/%N
+prepend-path CPATH               $mkl_root/include
+prepend-path PKG_CONFIG_PATH     $mkl_root/bin/pkgconfig
+
+#ipp environment
+set ipp_root $cl_root/ipp
+setenv       IPPROOT             $ipp_root
+prepend-path CPATH               $ipp_root/include
+prepend-path LD_LIBRARY_PATH     $ipp_root/lib/intel64
+prepend-path LIBRARY_PATH        $ipp_root/lib/intel64
+
+#mpi framework environment
+set mpi_root $cl_root/mpi
+setenv       I_MPI_ROOT          $mpi_root
+prepend-path PATH                $mpi_root/intel64/libfabric/bin:$mpi_root/intel64/bin
+prepend-path CLASSPATH           $mpi_root/intel64/lib/mpi.jar
+#The LD_LIBRARY_PATH lines look redundant, but it is what the intel environment
+#scripts do, so I'm following them literally.
+prepend-path LD_LIBRARY_PATH     $mpi_root/intel64/lib/release:$mpi_root/intel64/lib
+prepend-path LD_LIBRARY_PATH     $mpi_root/intel64/libfabric/lib:$mpi_root/intel64/lib/release:$mpi_root/intel64/lib
+prepend-path LIBRARY_PATH        $mpi_root/intel64/libfabric/lib
+setenv       FI_PROVIDER_PATH    $mpi_root/intel64/libfabric/lib/prov
+prepend-path MANPATH             $mpi_root/man
+
+#compiler environment
+set compiler_root $cl_root/compiler
+prepend-path PATH                $cl_root/bin/intel64
+prepend-path LD_LIBRARY_PATH     $compiler_root/lib/intel64_lin
+prepend-path NLSPATH             $compiler_root/lib/intel64/locale/%l_%t/%N
+prepend-path MANPATH             $install_root/man/common

@@ -1,0 +1,69 @@
+#%Module
+conflict intel
+
+set version "2018.0.128"
+module-whatis "Provides Intel Parallel Studio XE $version"
+set install_root /share/apps/intel/2018
+set cl_root $install_root/parallel_studio_xe_msi/compilers_and_libraries_$version/linux
+setenv INTEL_LICENSE_FILE /share/apps/intel/Licenses/license.lic
+
+#daal environment
+set daal_root $cl_root/daal
+setenv       DAALROOT          $daal_root
+prepend-path CPATH             $daal_root/include
+prepend-path LIBRARY_PATH      $daal_root/lib/intel64_lin:$daal_root/../tbb/lib/intel64_lin/gcc4.4
+prepend-path LD_LIBRARY_PATH   $daal_root/lib/intel64_lin:$daal_root/../tbb/lib/intel64_lin/gcc4.4
+prepend-path CLASSPATH         $daal_root/lib/daal.jar
+
+#debugger environment
+set debugger_root $install_root/parallel_studio_xe_msi/debugger_2018
+setenv       INTEL_PYTHONHOME   $debugger_root/python/intel64
+setenv       GDB_CROSS          $debugger_root/gdb/intel64/bin/gdb-ia
+setenv       GDBSERVER_MIC      $debugger_root/gdb/targets/intel64/x200/bin/gdbserver
+setenv       MPM_LAUNCHER       $debugger_root/mpm/mic/bin/start_mpm.sh
+prepend-path LD_LIBRARY_PATH    $debugger_root/iga/lib:$debugger_root/libipt/intel64/lib
+prepend-path MANPATH            $install_root/parallel_studio_xe_msi/documentation_2018/en/debugger/gdb-ia/man:$install_root/parallel_studio_xe_msi/documentation_2018/en/debugger/gdb-igfx/man
+prepend-path INFOPATH           $install_root/parallel_studio_xe_msi/documentation_2018/en/debugger/gdb-ia/info:$install_root/parallel_studio_xe_msi/documentation_2018/en/debugger/gdb-igfx/info
+prepend-path NLSPATH            $debugger_root/gdb/intel64/share/locale/%l_%t/%N
+
+#tbb environment
+set tbb_root $cl_root/tbb
+setenv       TBBROOT             $tbb_root
+prepend-path LD_LIBRARY_PATH     $tbb_root/lib/intel64/gcc4.4
+prepend-path LIBRARY_PATH        $tbb_root/lib/intel64/gcc4.4
+prepend-path CPATH               $tbb_root/include
+
+#pstl environment
+set pstl_root $cl_root/pstl
+setenv       PSTLROOT            $pstl_root
+prepend-path CPATH               $pstl_root/include:$tbb_root/include
+
+#mkl environment
+set mkl_root $cl_root/mkl
+setenv       MKLROOT             $mkl_root
+prepend-path LD_LIBRARY_PATH     $cl_root/tbb/lib/intel64_lin/gcc4.4:$cl_root/compiler/lib/intel64_lin:$mkl_root/lib/intel64_lin
+prepend-path LIBRARY_PATH        $cl_root/tbb/lib/intel64_lin/gcc4.4:$cl_root/compiler/lib/intel64_lin:$mkl_root/lib/intel64_lin
+prepend-path NLSPATH             $mkl_root/lib/intel64_lin/locale/%l_%t/%N
+prepend-path CPATH               $mkl_root/include
+
+#ipp environment
+set ipp_root $cl_root/ipp
+setenv       IPPROOT             $ipp_root
+prepend-path CPATH               $ipp_root/include
+prepend-path LD_LIBRARY_PATH     $ipp_root/lib/intel64
+prepend-path LIBRARY_PATH        $ipp_root/lib/intel64
+
+#mpi framework environment
+set impi_root $install_root/impi_msi/compilers_and_libraries_2018.0.128/linux/mpi
+setenv I_MPI_ROOT $impi_root
+prepend-path PATH $impi_root/intel64/bin
+prepend-path CLASSPATH $impi_root/intel64/lib/mpi.jar
+prepend-path LD_LIBRARY_PATH $impi_root/intel64/lib/release:$impi_root/mic/lib/release:$impi_root/intel64/lib:$impi_root/mic/lib
+prepend-path MANPATH $impi_root/man
+
+#compiler environment
+set compiler_root $cl_root/compiler
+prepend-path PATH                $cl_root/bin/intel64
+prepend-path LD_LIBRARY_PATH     $compiler_root/lib/intel64:$compiler_root/lib/intel64_lin
+prepend-path NLSPATH             $compiler_root/lib/intel64/locale/%l_%t/%N
+prepend-path MANPATH             $install_root/parallel_studio_xe_msi/man/common

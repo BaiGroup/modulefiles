@@ -1,0 +1,11 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tNWChem program."
+}
+
+conflict nwchem
+
+set version "6.5"
+module-whatis   "Provides NWChem $version"
+prepend-path PATH /share/apps/nwchem-6.5/bin/LINUX64

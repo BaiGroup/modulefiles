@@ -1,0 +1,47 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tIntel Parallel Studio XE."
+}
+
+conflict intel
+
+set version "2013.2.146"
+module-whatis "Provides Intel Parallel Studio XE $version"
+set basedir /share/apps/intel/composer_xe_$version
+setenv INTEL_LICENSE_FILE $basedir/../Licenses/license_2013.lic
+
+#idb
+setenv IDB_HOME $basedir/bin/intel64
+prepend-path PATH $basedir/bin/intel64:$basedir/bin/intel64_mic:$basedir/debugger/gui/intel64
+prepend-path NLSPATH $basedir/debugger/intel64/locale/%l_%t/%N
+
+#tbb
+setenv TBBROOT "$basedir/tbb"
+prepend-path MIC_LD_LIBRARY_PATH $basedir/tbb/lib/mic
+prepend-path LD_LIBRARY_PATH $basedir/tbb/lib/intel64/gcc4.4
+prepend-path LIBRARY_PATH $basedir/tbb/lib/intel64/gcc4.4
+prepend-path CPATH $basedir/tbb/include
+
+#ipp
+setenv IPPROOT "$basedir/ipp"
+prepend-path LD_LIBRARY_PATH $basedir/ipp/lib/intel64
+prepend-path LIBRARY_PATH $basedir/ipp/lib/intel64
+prepend-path NLSPATH $basedir/ipp/lib/intel64/locale/%l_%t/%N
+
+#mkl
+setenv MKLROOT "$basedir/mkl"
+prepend-path LD_LIBRARY_PATH $basedir/mkl/lib/intel64
+prepend-path LIBRARY_PATH $basedir/mkl/lib/intel64
+prepend-path MIC_LD_LIBRARY_PATH $basedir/mkl/lib/mic
+prepend-path NLSPATH $basedir/mkl/lib/intel64/locale/%l_%t/%N
+prepend-path INCLUDE $basedir/mkl/include
+prepend-path CPATH $basedir/mkl/include
+
+#main
+prepend-path PATH $basedir/bin/intel64
+prepend-path MIC_LD_LIBRARY_PATH $basedir/compiler/lib/mic
+prepend-path LD_LIBRARY_PATH $basedir/compiler/lib/intel64
+prepend-path LIBRARY_PATH $basedir/compiler/lib/intel64
+prepend-path NLSPATH $basedir/compiler/lib/intel64/locale/%l_%t/%N
+prepend-path MANPATH $basedir/man/en_US

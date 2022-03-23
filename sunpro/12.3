@@ -1,0 +1,15 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tOracle Solaris Studio."
+}
+
+conflict sunpro
+
+set version "12.3"
+module-whatis   "Provides Oracle Solaris Studio $version"
+set basedir "/share/apps/oracle/solarisstudio$version"
+prepend-path PATH $basedir/bin
+prepend-path LD_LIBRARY_PATH $basedir/lib
+prepend-path INCLUDE_PATH $basedir/include
+prepend-path MANPATH $basedir/man/man1

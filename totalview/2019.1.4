@@ -1,0 +1,63 @@
+#%Module1.0
+conflict totalview
+
+set	root /share/apps/totalview/totalview.2019.1.4
+set	root_ms	/share/apps/totalview/memoryscape.2019.1.4
+set	root_flm /share/apps/totalview/flexlm-11.13.1-1
+
+setenv MPICH_SMP_SINGLE_COPY_OFF 1
+setenv MPICH_GNI_NDREG_LAZYMEM disabled
+#setenv LD_PRELOAD  $root/linux-x86-64/lib/undodb_infiniband_preload_x64.so
+#setenv TVMEMDEBUG_POST_LINK_OPTS "-L${root}/linux-x86-64/lib -ltvheap_cnl_static -Wl,-zmuldefs"
+#setenv TVMEMDEBUG_POST_LINK_OPTS "-zmuldefs -L${root}/linux-x86-64/lib -ltvheap_cnl_static"
+#setenv TVMEMDEBUG_POST_LINK_OPTS "-L${root}/linux-x86-64/lib -ltvheap_cnl_static"
+prepend-path MANPATH $root/man
+prepend-path PATH $root/bin
+prepend-path PATH ${root_ms}/bin
+
+prepend-path PE_PRODUCT_LIST TOTALVIEW
+
+# If the Gemini (ipogif0) socket interface exists, TotalView needs to be
+# told to use it.
+if { ![catch {exec netstat -i |& grep  "^ipogif0 " } result] } {
+  setenv TV_EXTRA_OPTIONS "-use_interface ipogif0"
+}
+
+# If the SeaStar (ss) socket interface exists, TotalView needs to be
+# told to use it.
+if { ![catch {exec netstat -i |& grep  "^ss " } result] } {
+  setenv TV_EXTRA_OPTIONS "-use_interface ss"
+}
+
+# Set up linker options for memory debuggable compiles. Note that the user will
+# need to load the xt-totalview-mem-debug module to actaully obtain such a
+# compilation.
+if { [ info exists env(XTPE_COMPILE_TARGET) ] } {
+        set target $env(XTPE_COMPILE_TARGET)
+} else {
+        set target linux
+}
+
+if { "$target" == "catamount" } {
+setenv TVMEMDEBUG_POST_LINK_OPTS " -L${root}/linux-x86-64/lib -lgmalloc -ltvheap_xt3"
+} else {
+ # This environment variable was conflicting with that set by totalview-mem-debug. See bug 799460
+ #setenv TVMEMDEBUG_POST_LINK_OPTS " -L${root}/linux-x86-64/lib -ltvheap_cnl_static"
+}
+
+#from mem
+#set pkgconfig_enabled [ info exists env(PKGCONFIG_ENABLED) ]
+#
+#if { $pkgconfig_enabled } {
+#  source ${PE_TVMEMDEBUG_DIR}/.set_paths_stub
+#  prepend-path PE_PKGCONFIG_LIBS tvheap_cnl_static 
+#  setenv TVMEMDEBUG_POST_LINK_OPTS "-Wl,-zmuldefs"
+#} else {
+#  setenv TVMEMDEBUG_POST_LINK_OPTS " -L$root/linux-x86-64/lib -ltvheap_cnl_static -Wl,-zmuldefs"
+#  prepend-path     PE_PRODUCT_LIST TVMEMDEBUG
+#}
+
+# Totalview will require a license file managed by flexlm
+# setenv FLEXLM ${root_flm}
+# prepend-path LM_LICENSE_FILE ${root_flm}/license.txt
+prepend-path LM_LICENSE_FILE ${root_flm}/license.dat

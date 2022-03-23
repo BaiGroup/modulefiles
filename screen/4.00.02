@@ -1,0 +1,11 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tscreen window system."
+}
+
+conflict screen
+
+set version "4.0.2"
+module-whatis   "Provides screen $version"
+prepend-path PATH /share/apps/screen-$version/bin

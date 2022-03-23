@@ -1,0 +1,15 @@
+#%Module
+proc ModulesHelp { } {
+        global version
+
+        puts stderr "\tThis module provides support for the"
+        puts stderr "\tG95 compiler."
+}
+
+conflict open64
+
+set version "0.94"
+module-whatis   "Provides G95 $version compiler"
+set basedir "/share/apps/g95"
+prepend-path PATH $basedir/bin
+prepend-path LD_LIBRARY_PATH $basedir/lib/gcc-lib/x86_64-unknown-linux-gnu/4.0.3

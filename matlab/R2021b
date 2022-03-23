@@ -1,0 +1,16 @@
+#%Module
+proc ModulesHelp { } {
+  global version
+  puts stderr "\tThis module adds MATLAB to your path."
+}
+
+conflict matlab
+
+#system logger -p local7.info "ModuleInfo: [module-info name] [module-info mode] [module-info shell]   [uname nodename] [uname release] [uname version] $env(LOGNAME)"
+
+set version "R2021b"
+module-whatis "Provides MATLAB $version"
+set basedir "/share/apps/MATLAB/$version"
+prepend-path LD_LIBRARY_PATH $basedir/runtime/glnxa64
+prepend-path PATH $basedir/bin
+setenv MATLAB $basedir

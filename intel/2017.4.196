@@ -1,0 +1,53 @@
+#%Module
+conflict intel
+
+set version "2017.4.196"
+module-whatis "Provides Intel Parallel Studio XE $version"
+set basedir /share/apps/intel/parallel_studio_xe_$version/compilers_and_libraries_$version/linux
+setenv INTEL_LICENSE_FILE /share/apps/intel/Licenses/license.lic
+
+#idb
+setenv IDB_HOME $basedir/bin/intel64
+prepend-path PATH $basedir/bin/intel64:$basedir/bin/intel64_mic:$basedir/debugger/gui/intel64
+prepend-path NLSPATH $basedir/debugger/intel64/locale/%l_%t/%N
+
+#tbb
+setenv TBBROOT "$basedir/tbb"
+prepend-path MIC_LD_LIBRARY_PATH $basedir/tbb/lib/mic
+prepend-path LD_LIBRARY_PATH $basedir/tbb/lib/intel64/gcc4.4
+prepend-path LIBRARY_PATH $basedir/tbb/lib/intel64/gcc4.4
+prepend-path CPATH $basedir/tbb/include
+
+#ipp
+setenv IPPROOT "$basedir/ipp"
+prepend-path LD_LIBRARY_PATH $basedir/ipp/lib/intel64
+prepend-path LIBRARY_PATH $basedir/ipp/lib/intel64
+prepend-path NLSPATH $basedir/ipp/lib/intel64/locale/%l_%t/%N
+
+#mkl
+setenv MKLROOT "$basedir/mkl"
+prepend-path LD_LIBRARY_PATH $basedir/mkl/lib/intel64
+prepend-path LIBRARY_PATH $basedir/mkl/lib/intel64
+prepend-path MIC_LD_LIBRARY_PATH $basedir/mkl/lib/mic
+prepend-path NLSPATH $basedir/mkl/lib/intel64/locale/%l_%t/%N
+prepend-path INCLUDE $basedir/mkl/include
+prepend-path CPATH $basedir/mkl/include
+
+#main
+prepend-path PATH $basedir/bin/intel64
+prepend-path MIC_LD_LIBRARY_PATH $basedir/compiler/lib/mic
+prepend-path LD_LIBRARY_PATH $basedir/compiler/lib/intel64
+prepend-path LIBRARY_PATH $basedir/compiler/lib/intel64
+prepend-path NLSPATH $basedir/compiler/lib/intel64/locale/%l_%t/%N
+prepend-path MANPATH $basedir/man/en_US
+
+#impi
+setenv I_MPI_ROOT "$basedir/mpi"
+prepend-path PATH $basedir/mpi/intel64/bin
+prepend-path LD_LIBRARY_PATH $basedir/mpi/intel64/lib
+prepend-path MANPATH $basedir/mpi/man
+prepend-path CPATH $basedir/mpi/intel64/include
+prepend-path FPATH $basedir/mpi/intel64/include
+prepend-path C_INCLUDE_PATH $basedir/mpi/intel64/include
+prepend-path CPLUS_INCLUDE_PATH $basedir/mpi/intel64/include
+prepend-path INCLUDE $basedir/mpi/intel64/include
