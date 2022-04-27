@@ -1,4 +1,0 @@
-#%Module
-conflict lammps
-
-append-path PATH $::env(HOME)/tools/lammps-120728/src
