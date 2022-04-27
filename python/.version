@@ -1,3 +1,2 @@
 #%Module
-set ModulesVersion "conda3.6"
-
+set ModulesVersion "conda3.10"

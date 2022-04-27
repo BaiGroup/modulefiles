@@ -5,7 +5,7 @@ proc ModulesHelp { } {
 
 conflict python
 
-set version "3.8"
+set version "3.10"
 module-whatis   "Provides Conda Python $version"
 set condadir /share/apps/conda
 set basedir $condadir/envs/conda$version
