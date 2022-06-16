@@ -1,0 +1,8 @@
+#%Module1.0#####################################################################
+conflict python
+
+set basedir "$::env(HOME)/tools/pyenv"
+setenv PYENV_ROOT $basedir
+setenv PYENV_SHELL [file tail $::env(SHELL)]
+setenv PYENV_VIRTUALENV_INIT 1
+prepend-path PATH $basedir/plugins/pyenv-virtualenv/shims:$basedir/shims:$basedir/bin
