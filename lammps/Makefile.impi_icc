@@ -8,13 +8,13 @@ SHELL = /bin/sh
 
 OMPI_CXX :=     icc
 CC =		mpiicpc
-CCFLAGS =	-g -O3 -openmp -DLAMMPS_MEMALIGN=64 -no-offload -xHost -fno-alias -ansi-alias -restrict -override-limits
+CCFLAGS =	-g -O3 -qopenmp -DLAMMPS_MEMALIGN=64 -qno-offload -xHost -fno-alias -ansi-alias -restrict -qoverride-limits
 SHFLAGS =	-fPIC
 DEPFLAGS =	-M
 
 LINK =		mpiicpc
-LINKFLAGS =	-g -O3 -openmp -xHost
-LIB =
+LINKFLAGS =	-g -O3 -qopenmp -xHost
+LIB = -ltbbmalloc
 SIZE =		size
 
 ARCHIVE =	ar
