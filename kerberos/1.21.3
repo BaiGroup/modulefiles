@@ -1,0 +1,8 @@
+#%Module
+conflict kerberos
+
+set basedir /share/apps/krb5
+setenv KRB5_CONFIG $basedir/etc/krb5/krb5.conf
+prepend-path PATH $basedir/bin
+prepend-path LD_LIBRARY_PATH $basedir/lib
+prepend-path MANPATH $basedir/share/man

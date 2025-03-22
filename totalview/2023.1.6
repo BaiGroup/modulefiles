@@ -1,0 +1,12 @@
+#%Module
+conflict totalview
+
+set basedir /share/apps/totalview
+set flexlm_dir $basedir/flexlm-11.16.6-0
+set totalview_dir $basedir/totalview.2023.1.6
+setenv FLEXLM $flexlm_dir
+setenv TOTALVIEW_DIR $totalview_dir
+setenv TVD_DISABLE_CRAY 1
+append-path PATH $totalview_dir/bin
+append-path MANPATH $totalview_dir/man
+append-path PE_PRODUCT_LIST TOTALVIEW
