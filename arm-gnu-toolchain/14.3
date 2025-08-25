@@ -1,0 +1,8 @@
+#%Module
+conflict arm-gnu-toolchain
+
+set basedir $::env(HOME)/tools/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi
+append-path PATH $basedir/bin
+append-path LD_LIBRARY_PATH $basedir/lib
+append-path INCLUDE $basedir/include
+append-path MANPATH $basedir/share/man
