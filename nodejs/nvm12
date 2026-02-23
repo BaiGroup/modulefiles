@@ -1,0 +1,16 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for Node.js."
+}
+
+conflict nodejs
+
+set version "12.22.12"
+module-whatis   "Provides nvm Node.js v$version"
+set homedir "$::env(HOME)"
+set basedir $homedir/tools/nvm/versions/node/v$version
+setenv NVM_BIN $basedir/bin
+setenv NVM_INC $basedir/include/node
+prepend-path PATH $basedir/bin:$homedir/.yarn/bin
+prepend-path NODE_PATH $basedir/lib/node_modules:$homedir/.config/yarn/global/node_modules
+prepend-path MANPAGE $basedir/share/man
