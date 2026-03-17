@@ -1,0 +1,14 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for Homebrew."
+}
+
+conflict brew
+
+module-whatis   "Provides Homebrew on Linux"
+set basedir /home/linuxbrew/.linuxbrew
+setenv HOMEBREW_CELLAR $basedir/Cellar
+setenv HOMEBREW_PREFIX $basedir
+setenv HOMEBREW_REPOSITORY $basedir/Homebrew
+setenv INFOPATH $basedir/share/info
+prepend-path PATH $basedir/bin:$basedir/sbin
