@@ -1,0 +1,19 @@
+#%Module
+proc ModulesHelp { } {
+        puts stderr "\tThis module provides support for Python."
+}
+
+conflict python
+
+set version "3.13"
+module-whatis   "Provides Mamba Python $version"
+set condadir /share/apps/conda
+set basedir $condadir/envs/mamba$version
+prepend-path PATH $basedir/bin:$condadir/condabin
+prepend-path MANPATH $basedir/share/man
+setenv CONDA_EXE $condadir/bin/conda
+setenv CONDA_PREFIX $basedir
+setenv CONDA_PYTHON_EXE $condadir/bin/python
+setenv CONDA_DEFAULT_ENV conda$version
+setenv MAMBA_EXE $condadir/bin/mamba
+setenv MAMBA_ROOT_PREFIX $condadir
